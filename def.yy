@@ -1,0 +1,193 @@
+%{
+#include <string>
+#include <cctype>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <stack>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <fstream>
+#define INFILE_ERROR 1
+#define OUTFILE_ERROR 2
+
+using namespace std;
+
+class Element {
+public:
+	int type;
+	string value;
+	Element(int type, string value) {
+		this->type = type;
+		this->value = value;
+	}
+};
+
+class Info_Type {
+public:
+	string typ;
+	Info_Type(string type) {
+		this->typ = type;
+	}
+};
+vector <string> code;
+map<string, int> symbols;
+const int NONE_TYPE = 0;
+const int INT_TYPE = 1;
+const int FLOAT_TYPE = 2;
+
+stack <Element> argstack;
+void make_op(char op, string mnemo);
+void insert_symbol(string symbol, int type);
+string gen_load_line(Element e, int regno);
+stringstream cs;
+
+FILE *file;
+extern FILE *yyin;
+extern "C" int yylex();
+extern "C" int yyerror(const char *msg);
+%}
+%union
+{char *text;
+int	ival; float fval;};
+%type <text> wyr
+%token <text> ID
+%token <ival> LC
+%token <fval> LR
+%token EQ LE GE NE
+%token INT DOUBLE
+%token INPUTI INPUTD
+%token PRINTI PRINTD
+%token IF ELSE WHILE
+%token DEF
+%left '+' '-'
+%left '*' '/'
+//%start wyr
+%%
+program	: linia					{;}
+				|	program linia	{;}
+				;
+linia		:	wyrsred				{;}
+				;
+wyrsred	: wyrprz ';'		{;}
+				;
+wyrprz	: ID '=' wyr		{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE);make_op('=', "sw");}
+				;
+wyr
+	:wyr '+' skladnik			{fprintf(file, " + "); make_op('+', "add");}
+	|wyr '-' skladnik			{fprintf(file, " - "); make_op('-', "sub");}
+	|skladnik							{fprintf(file," "); }
+	;
+skladnik
+	:skladnik '*' czynnik	{fprintf(file, " * "); make_op('*', "mul");}
+	|skladnik '/' czynnik	{fprintf(file, " / "); make_op('/', "div");}
+	|czynnik							{fprintf(file, " ");}
+	;
+czynnik
+	:ID										{fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
+	|LC										{fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
+	|LR										{fprintf(file, " %f", $1); argstack.push(Element(LR, to_string($1)));}
+	|'(' wyr ')'					{fprintf(file, " ");}
+	;
+%%
+string gen_load_line(Element e, int regno)
+{
+	stringstream s;
+	s << "l";
+	if(isdigit(e.value[0]))
+	{
+		s << "i ";
+	}
+	else
+	{
+		s << "w ";
+	}
+	s << "$t" << regno << " , " << e.value;
+	return s.str();
+}
+
+void insert_symbol(string symbol, int type)
+{
+	if(symbols.find(symbol) == symbols.end()) {
+		symbols[symbol] = type;
+	}
+}
+
+void make_op(char op, string mnemo)
+{
+	static int rCounter = 0;
+	Element op2=argstack.top();
+	argstack.pop();
+	Element op1=argstack.top();
+	argstack.pop();
+	string result_name = "result" + to_string(rCounter);
+	stringstream s;
+	s << result_name << " <= " << op1.value << op << op2.value;
+	cs << s.str() << endl;
+
+	code.push_back("\n# " + s.str());
+	if (op == '=')
+	{
+		string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+		string line4 = "sw $t0 , " + op2.value;
+		code.push_back(line1);
+		code.push_back(line4);
+	}
+	else
+	{
+		Element e = Element(ID, result_name);
+		argstack.push(e);
+		insert_symbol(e.value, INT_TYPE);
+		string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
+		string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
+		string line3 = mnemo + " $t0 , $t0 , $t1";
+		string line4 = "sw $t0 , " + result_name;
+		code.push_back(line1);
+		code.push_back(line2);
+		code.push_back(line3);
+		code.push_back(line4);
+	}
+	rCounter++;
+
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc>1)
+	{
+		yyin=fopen(argv[1],"r");//otwieramy pliki yyout, yyin
+	}
+	if((file = fopen("rpn.txt","w")) == NULL)
+	{
+		printf("Nie mozna utworzyc pliku rpn.txt");
+		exit(1);
+	}
+	yyparse();
+	stringstream toMars;
+	toMars << ".data\n";
+	for(auto symbol:symbols)
+	{
+		toMars << symbol.first << ": ";
+		if(symbol.second == INT_TYPE)
+		{
+			toMars << ".word 0 \n";
+		}
+		else
+		{
+			toMars << ".error\n";
+		}
+	}
+	toMars << ".text\n";
+	for(auto line: code)
+	{
+		toMars << line << endl;
+	}
+	ofstream symbole("symbols.txt");
+	symbole << toMars.str();
+	symbole.close();
+	ofstream trojki("trojki.txt");
+	trojki << cs.str();
+	trojki.close();
+	return 0;
+}
