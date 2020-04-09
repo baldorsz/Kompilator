@@ -24,15 +24,17 @@ public:
 	}
 };
 
-class Info_Type {
+class Symbol {
 public:
-	string typ;
-	Info_Type(string type) {
-		this->typ = type;
+	int type;
+	int size;
+	Symbol(int type, int sizie) {
+		this->type = type;
+		this->size = size;
 	}
 };
 vector <string> code;
-map<string, int> symbols;
+map<string, Symbol> symbols;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
@@ -72,7 +74,7 @@ linia		:	wyrsred				{;}
 				;
 wyrsred	: wyrprz ';'		{;}
 				;
-wyrprz	: ID '=' wyr		{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE);make_op('=', "sw");}
+wyrprz	: ID '=' wyr		{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
 				;
 wyr
 	:wyr '+' skladnik			{fprintf(file, " + "); make_op('+', "add");}
@@ -107,10 +109,10 @@ string gen_load_line(Element e, int regno)
 	return s.str();
 }
 
-void insert_symbol(string symbol, int type)
+void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
-		symbols[symbol] = type;
+		symbols[symbol] = Symbol(type, size);
 	}
 }
 
@@ -138,7 +140,7 @@ void make_op(char op, string mnemo)
 	{
 		Element e = Element(ID, result_name);
 		argstack.push(e);
-		insert_symbol(e.value, INT_TYPE);
+		insert_symbol(e.value, INT_TYPE, 1);
 		string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
 		string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
 		string line3 = mnemo + " $t0 , $t0 , $t1";
@@ -168,15 +170,7 @@ int main(int argc, char *argv[])
 	toMars << ".data\n";
 	for(auto symbol:symbols)
 	{
-		toMars << symbol.first << ": ";
-		if(symbol.second == INT_TYPE)
-		{
-			toMars << ".word 0 \n";
-		}
-		else
-		{
-			toMars << ".error\n";
-		}
+		toMars << symbol.first << ": " << symbol.second.type << " -- " << symbol.second.size << endl;
 	}
 	toMars << ".text\n";
 	for(auto line: code)
