@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
 	{
 		toMars << symbol.first << ": " << symbol.second.type << " -- " << symbol.second.size << endl;
 	}
+	toMars << "enter: .asciiz : \"\\n\"";
 	toMars << ".text\n";
 	for(auto line: code)
 	{
