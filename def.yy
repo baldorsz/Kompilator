@@ -99,7 +99,7 @@ string gen_load_line_2(string i, string reg_name)
 {
 	stringstream s;
 	s << "l";
-	if(isdigit(i))
+	if(isdigit(i[0]))
 	{
 		s << "i ";
 	}
