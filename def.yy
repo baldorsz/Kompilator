@@ -34,7 +34,7 @@ public:
 	}
 };
 vector <string> code;
-map<string, Symbol_Info> symbols;
+map<string, Symbol_Info *> symbols;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
@@ -141,7 +141,7 @@ string gen_load_line(Element e, int regno)
 void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
-		symbols[symbol] = Symbol_Info(type, size);
+		symbols[symbol] = new Symbol_Info(type, size);
 	}
 }
 
