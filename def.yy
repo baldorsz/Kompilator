@@ -113,7 +113,7 @@ string gen_load_line_2(string i, string reg_name)
 
 void make_print_int(int v) {
 	string line1 = "# printi " + to_string(v); //"1_ $t0 , __";
-	string line2 = gen_load_line_2(1, "v0"); //"1_ $t1 , __";
+	string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
 	string line3 = gen_load_line_2(to_string(v), "a0");
 	string line4 = "syscal";
 	code.push_back(line1);
