@@ -42,7 +42,9 @@ const int FLOAT_TYPE = 2;
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
+void make_print_int(int v);
 string gen_load_line(Element e, int regno);
+string gen_load_line_2(Element e, string reg_name);
 stringstream cs;
 
 FILE *file;
@@ -67,7 +69,7 @@ int	ival; float fval;};
 %left '*' '/'
 //%start wyr
 %%
-program	: linia					{;}
+program	: 			linia			{;}
 				|	program linia	{;}
 				;
 linia		:	wyrsred				{;}
@@ -93,6 +95,33 @@ czynnik
 	|'(' wyr ')'					{fprintf(file, " ");}
 	;
 %%
+string gen_load_line_2(Element op, string reg_name)
+{
+	stringstream s;
+	s << "l";
+	if(isdigit(e.value[0]))
+	{
+		s << "i ";
+	}
+	else
+	{
+		s << "w ";
+	}
+	s << "$" << reg_name << " , " << e.value;
+	return s.str();
+}
+
+void make_print_int(int v) {
+	string line1 = "# printi " + to_string(v); //"1_ $t0 , __";
+	string line2 = gen_load_line_2(1, "v0"); //"1_ $t1 , __";
+	string line3 = gen_load_line_2(to_string(v), "a0");
+	string line4 = "syscal";
+	code.push_back(line1);
+	code.push_back(line2);
+	code.push_back(line3);
+	code.push_back(line4);
+}
+
 string gen_load_line(Element e, int regno)
 {
 	stringstream s;
@@ -105,14 +134,14 @@ string gen_load_line(Element e, int regno)
 	{
 		s << "w ";
 	}
-	s << "$t" << regno << " , " << e.value;
+	s << "$" << regno << " , " << e.value;
 	return s.str();
 }
 
 void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
-		symbols[symbol] = Symbol_Info(type, size);
+		//symbols[symbol] = Symbol_Info(type, size);
 	}
 }
 
