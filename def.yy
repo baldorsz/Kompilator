@@ -28,7 +28,7 @@ class Symbol {
 public:
 	int type;
 	int size;
-	Symbol(int type, int sizie) {
+	Symbol(int type, int size) {
 		this->type = type;
 		this->size = size;
 	}
