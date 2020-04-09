@@ -134,7 +134,7 @@ string gen_load_line(Element e, int regno)
 	{
 		s << "w ";
 	}
-	s << "$" << regno << " , " << e.value;
+	s << "$t" << regno << " , " << e.value;
 	return s.str();
 }
 
