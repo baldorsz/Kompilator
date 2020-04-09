@@ -41,7 +41,7 @@ const int FLOAT_TYPE = 2;
 
 stack <Element> argstack;
 void make_op(char op, string mnemo);
-void insert_symbol(string symbol, int type);
+void insert_symbol(string symbol, int type, int size);
 string gen_load_line(Element e, int regno);
 stringstream cs;
 
