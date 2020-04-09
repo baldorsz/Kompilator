@@ -44,7 +44,7 @@ void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
 void make_print_int(int v);
 string gen_load_line(Element e, int regno);
-string gen_load_line_2(Element e, string reg_name);
+string gen_load_line_2(int i, string reg_name);
 stringstream cs;
 
 FILE *file;
@@ -95,11 +95,11 @@ czynnik
 	|'(' wyr ')'					{fprintf(file, " ");}
 	;
 %%
-string gen_load_line_2(Element e, string reg_name)
+string gen_load_line_2(string i, string reg_name)
 {
 	stringstream s;
 	s << "l";
-	if(isdigit(e.value[0]))
+	if(isdigit(i))
 	{
 		s << "i ";
 	}
@@ -107,7 +107,7 @@ string gen_load_line_2(Element e, string reg_name)
 	{
 		s << "w ";
 	}
-	s << "$" << reg_name << " , " << e.value;
+	s << "$" << reg_name << " , " << i;
 	return s.str();
 }
 
