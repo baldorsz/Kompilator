@@ -95,7 +95,7 @@ czynnik
 	|'(' wyr ')'					{fprintf(file, " ");}
 	;
 %%
-string gen_load_line_2(Element op, string reg_name)
+string gen_load_line_2(Element e, string reg_name)
 {
 	stringstream s;
 	s << "l";
