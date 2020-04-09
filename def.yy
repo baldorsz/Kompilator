@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 	toMars << ".data\n";
 	for(auto symbol:symbols)
 	{
-		toMars << symbol.first << ": " << symbol.second.type << " -- " << symbol.second.size << endl;
+		toMars << symbol.first << ": " << symbol.second->type << " -- " << symbol.second->size << endl;
 	}
 	toMars << "enter: .asciiz : \"\\n\"";
 	toMars << ".text\n";
