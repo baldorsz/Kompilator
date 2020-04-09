@@ -174,10 +174,14 @@ void make_op(char op, string mnemo)
 		string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
 		string line3 = mnemo + " $t0 , $t0 , $t1";
 		string line4 = "sw $t0 , " + result_name;
+
 		code.push_back(line1);
 		code.push_back(line2);
 		code.push_back(line3);
 		code.push_back(line4);
+		code.push_back("li $v0 , 4");
+		code.push_back("la $a0 , enter");
+		code.push_back("syscall");
 	}
 	rCounter++;
 
