@@ -112,7 +112,7 @@ string gen_load_line(Element e, int regno)
 void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
-		symbols[symbol].second = Symbol_Info(type, size);
+		symbols[symbol] = Symbol_Info(type, size);
 	}
 }
 
