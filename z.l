@@ -18,6 +18,8 @@ int yyerror(const char *,...);
 \=			{return '=';}
 \[			{return '[';}
 \]			{return ']';}
+\{			{return '{';}
+\}			{return '}';}
 \!\=		{return NE;}
 \;			{return ';';}
 \>			{return '>';}
