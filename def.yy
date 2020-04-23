@@ -77,6 +77,7 @@ linia	:	wyrsred					{;}
 		|	wyrif					{;}
 		;
 wyrif	:	IF '(' wyrlog ')' { program }		{;}
+		;
 wyrsred	:	wyrprz ';'				{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
