@@ -27,19 +27,22 @@ int yyerror(const char *,...);
 \>\=		{return GT;}
 \<\=		{return LT;}
 "if"		{return IF;}
-"else"	{return ELSE;}
+"else"		{return ELSE;}
 "int"		{return INT;}
-"float"	{return FLOAT;}
-"while"	{return WHILE;}
+"float"		{return FLOAT;}
+"string"	{return STRING;}
+"while"		{return WHILE;}
 "printi"	{return PRINTI;}
 "printf"	{return PRINTF;}
+"print"		{return PRINT;}
 "inputi"	{return INPUTI;}
 "inputf"	{return INPUTF;}
 "def"		{return DEF;}
 \=\=		{return EQ;}
-0|[1-9][0-9]*	{yylval.ival = atoi(yytext);return LC;}
-(0|[1-9][0-9]*)\.[0-9]+	{yylval.fval = atof(yytext);return LR;}
-[A-Za-z_][A-Za-z0-9_]* 	{yylval.text = strdup(yytext);return ID;}
+0|[1-9][0-9]*				{yylval.ival = atoi(yytext);return LC;}
+(0|[1-9][0-9]*)\.[0-9]+		{yylval.fval = atof(yytext);return LR;}
+[A-Za-z_][A-Za-z0-9_]* 		{yylval.text = strdup(yytext);return ID;}
+\"([^\\\"]|\\.)*\"	{yylval.text = strdup(yytext);return STRING;}
 \ |\t			{;}
 \n			{yylineno++;}
 .			{yyerror("Blad leksykalny\n");}

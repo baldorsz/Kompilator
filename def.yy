@@ -38,12 +38,12 @@ map<string, Symbol_Info *> symbols;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
+const int STRING_TYPE = 3;
 
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
-void make_print_int(int v);
-void make_print_float(float f);
+void make_print(Element e);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
@@ -64,7 +64,7 @@ int	ival; float fval;};
 %token <ival> LC
 %token <fval> LR
 %token EQ LT GT NE
-%token INT FLOAT
+%token INT FLOAT STRING
 %token INPUTI INPUTF
 %token PRINTI PRINTF
 %token IF ELSE WHILE
@@ -88,8 +88,9 @@ while_begin	:	WHILE '(' wyrlog ')'		{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
 		;
-wyrwyp	:	PRINTI '(' wyr ')' 		{make_print_int($3);}
-		|	PRINTF '(' wyr ')'		{make_print_float($3);}
+wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
+		|	PRINTF '(' wyr ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
+		|	PRINT '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
 wyrwpr	:	INPUTI '(' wyr ')'		{;}
 		|	INPUTF '(' wyr ')'		{;}
@@ -139,26 +140,31 @@ string gen_load_line_2(string i, string reg_name)
 
 void 
 
-void make_print_int(int v) {
-	string line1 = "# printi " + to_string(v); //"1_ $t0 , __";
-	string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
-	string line3 = gen_load_line_2(to_string(v), "a0");
-	string line4 = "syscal";
-	code.push_back(line1);
-	code.push_back(line2);
-	code.push_back(line3);
-	code.push_back(line4);
+void make_print_int(Element e) {
+	if(e.type == INT_TYPE) {
+		string line1 = "# printi " + to_string(e.value); //"1_ $t0 , __";
+		string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
+		string line3 = gen_load_line_2(to_string(e.value), "a0");
+		string line4 = "syscal";
+		code.push_back(line1);
+		code.push_back(line2);
+		code.push_back(line3);
+		code.push_back(line4);
+	}
+	else if (e.type == FLOAT_TYPE) {
+		string line1 = "# PRINTF " + to_string(e.value); //"1_ $t0 , __";
+		string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
+		string line3 = gen_load_line_2(to_string(e.value), "f0");
+		string line4 = "syscal";
+		code.push_back(line1);
+		code.push_back(line2);
+		code.push_back(line3);
+		code.push_back(line4);
+	}
 }
 
 void make_print_float(float f) {
-	string line1 = "# PRINTF " + to_string(f); //"1_ $t0 , __";
-	string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
-	string line3 = gen_load_line_2(to_string(f), "f0");
-	string line4 = "syscal";
-	code.push_back(line1);
-	code.push_back(line2);
-	code.push_back(line3);
-	code.push_back(line4);
+	
 }
 
 void make_input_int(int v) {
