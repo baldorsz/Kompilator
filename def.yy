@@ -60,7 +60,7 @@ int	ival; float fval;};
 %token <text> ID
 %token <ival> LC
 %token <fval> LR
-%token EQ LE GE NE
+%token EQ LT GT NE
 %token INT DOUBLE
 %token INPUTI INPUTD
 %token PRINTI PRINTD
@@ -70,31 +70,37 @@ int	ival; float fval;};
 %left '*' '/'
 //%start wyr
 %%
-program	: 			linia			{;}
+program	: 	linia					{;}
 		|	program linia			{;}
 		;
 linia	:	wyrsred					{;}
 		|	wyrif					{;}
 		;
-wyrsred	: wyrprz ';'				{;}
+wyrif	:	IF '(' wyrlog ')' { program }		{;}
+wyrsred	:	wyrprz ';'				{;}
 		;
-wyrprz	: ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
+wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
 		;
+wyrlog	: 	wyr EQ wyr				{;}
+		|	wyr NE wyr				{;}
+		| 	wyr LT wyr				{;}
+		|	wyr GT wyr				{;}
+		;	
 wyr
-		:wyr '+' skladnik			{fprintf(file, " + "); make_op('+', "add");}
-		|wyr '-' skladnik			{fprintf(file, " - "); make_op('-', "sub");}
-		|skladnik					{fprintf(file," "); }
+		:	wyr '+' skladnik		{fprintf(file, " + "); make_op('+', "add");}
+		|	wyr '-' skladnik		{fprintf(file, " - "); make_op('-', "sub");}
+		|	skladnik				{fprintf(file," "); }
 		;
 skladnik
-		:skladnik '*' czynnik		{fprintf(file, " * "); make_op('*', "mul");}
-		|skladnik '/' czynnik		{fprintf(file, " / "); make_op('/', "div");}
-		|czynnik					{fprintf(file, " ");}
+		:	skladnik '*' czynnik	{fprintf(file, " * "); make_op('*', "mul");}
+		|	skladnik '/' czynnik	{fprintf(file, " / "); make_op('/', "div");}
+		|	czynnik					{fprintf(file, " ");}
 		;
 czynnik
-		:ID							{fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
-		|LC							{fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
-		|LR							{fprintf(file, " %f", $1); argstack.push(Element(LR, to_string($1)));}
-		|'(' wyr ')'				{fprintf(file, " ");}
+		:	ID						{fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
+		|	LC						{fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
+		|	LR						{fprintf(file, " %f", $1); argstack.push(Element(LR, to_string($1)));}
+		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
 string gen_load_line_2(string i, string reg_name)

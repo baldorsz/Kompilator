@@ -24,8 +24,8 @@ int yyerror(const char *,...);
 \;			{return ';';}
 \>			{return '>';}
 \<			{return '<';}
-\>\=		{return GE;}
-\<\=		{return LE;}
+\>\=		{return GT;}
+\<\=		{return LT;}
 "if"		{return IF;}
 "else"	{return ELSE;}
 "int"		{return INT;}
