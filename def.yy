@@ -64,9 +64,9 @@ int	ival; float fval;};
 %token <ival> LC
 %token <fval> LR
 %token EQ LT GT NE
-%token INT DOUBLE
-%token INPUTI INPUTD
-%token PRINTI PRINTD
+%token INT FLOAT
+%token INPUTI INPUTF
+%token PRINTI PRINTF
 %token IF ELSE WHILE
 %token DEF
 %left '+' '-'
@@ -87,16 +87,17 @@ wyrwhile	:	while_begin '{' program '}'	{;}
 while_begin	:	WHILE '(' wyrlog ')'		{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
-		|	wyrwyp ';'				{;}
-		|	wyrwpr ';'				{;}
 		;
-wyrwyp	;	PRINTI '(' wyr ')' 		{make_print_int($3);}
-		|	PRINTD '(' wyr ')'		{make_print_float($3);}
+wyrwyp	:	PRINTI '(' wyr ')' 		{make_print_int($3);}
+		|	PRINTF '(' wyr ')'		{make_print_float($3);}
 		;
 wyrwpr	:	INPUTI '(' wyr ')'		{;}
-		|	INPUTD '(' wyr ')'		{;}
+		|	INPUTF '(' wyr ')'		{;}
 		;
-wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
+wyrprz	:	INT ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
+		|	INT ID '=' wyrwpr			{;}
+		|	FLOAT ID '=' wyr			{;}
+		|	FLOAT ID '=' wyrwpr			{;}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
@@ -150,7 +151,7 @@ void make_print_int(int v) {
 }
 
 void make_print_float(float f) {
-	string line1 = "# printd " + to_string(f); //"1_ $t0 , __";
+	string line1 = "# PRINTF " + to_string(f); //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
 	string line3 = gen_load_line_2(to_string(f), "f0");
 	string line4 = "syscal";

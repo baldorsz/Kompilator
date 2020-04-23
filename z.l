@@ -29,12 +29,12 @@ int yyerror(const char *,...);
 "if"		{return IF;}
 "else"	{return ELSE;}
 "int"		{return INT;}
-"double"	{return DOUBLE;}
+"float"	{return FLOAT;}
 "while"	{return WHILE;}
 "printi"	{return PRINTI;}
-"printd"	{return PRINTD;}
+"printf"	{return PRINTF;}
 "inputi"	{return INPUTI;}
-"inputd"	{return INPUTD;}
+"inputf"	{return INPUTF;}
 "def"		{return DEF;}
 \=\=		{return EQ;}
 0|[1-9][0-9]*	{yylval.ival = atoi(yytext);return LC;}
