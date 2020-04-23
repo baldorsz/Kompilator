@@ -43,6 +43,9 @@ stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
 void make_print_int(int v);
+void make_print_float(float f);
+void make_input_int(int v);
+void make_input_float(float f);
 void make_array(string, int, int);
 string gen_load_line(Element e, int regno);
 string gen_load_line_2(string i, string reg_name);
@@ -75,10 +78,23 @@ program	: 	linia					{;}
 		;
 linia	:	wyrsred					{;}
 		|	wyrif					{;}
+		|	wyrwhile				{;}
 		;
-wyrif	:	IF '(' wyrlog ')' '{' program '}'		{;}
+wyrif	:	if_begin '{' program '}'		{;}
 		;
+if_begin	:	IF '(' wyrlog ')'			{;}
+wyrwhile	:	while_begin '{' program '}'	{;}
+while_begin	:	WHILE '(' wyrlog ')'		{;}
+			;
 wyrsred	:	wyrprz ';'				{;}
+		|	wyrwyp ';'				{;}
+		|	wyrwpr ';'				{;}
+		;
+wyrwyp	;	PRINTI '(' wyr ')' 		{make_print_int($3);}
+		|	PRINTD '(' wyr ')'		{make_print_float($3);}
+		;
+wyrwpr	:	INPUTI '(' wyr ')'		{;}
+		|	INPUTD '(' wyr ')'		{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
 		;
@@ -120,6 +136,8 @@ string gen_load_line_2(string i, string reg_name)
 	return s.str();
 }
 
+void 
+
 void make_print_int(int v) {
 	string line1 = "# printi " + to_string(v); //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
@@ -129,6 +147,23 @@ void make_print_int(int v) {
 	code.push_back(line2);
 	code.push_back(line3);
 	code.push_back(line4);
+}
+
+void make_print_float(float f) {
+	string line1 = "# printd " + to_string(f); //"1_ $t0 , __";
+	string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
+	string line3 = gen_load_line_2(to_string(f), "f0");
+	string line4 = "syscal";
+	code.push_back(line1);
+	code.push_back(line2);
+	code.push_back(line3);
+	code.push_back(line4);
+}
+
+void make_input_int(int v) {
+	string line1 = "#  inputi " + to_string(v);
+	string line2 = ".data\n"
+	string line3 = 
 }
 
 string gen_load_line(Element e, int regno)
