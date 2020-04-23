@@ -76,7 +76,7 @@ program	: 	linia					{;}
 linia	:	wyrsred					{;}
 		|	wyrif					{;}
 		;
-wyrif	:	IF '(' wyrlog ')' { program }		{;}
+wyrif	:	IF '(' wyrlog ')' '{' program '}'		{;}
 		;
 wyrsred	:	wyrprz ';'				{;}
 		;
