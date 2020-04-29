@@ -93,7 +93,7 @@ wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
 		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
-wyrwpr	:	INPUTI '(' LC ')'		{insert_symbol();}
+wyrwpr	:	INPUTI '(' LC ')'		{;}
 		|	INPUTF '(' LR ')'		{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
@@ -141,7 +141,7 @@ void make_print(Element e) {
 	if(e.type == INT_TYPE) {
 		string line1 = "# printi " + to_string(e.value); //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(to_string(e.value), "a0");
+		string line3 = gen_load_line_2(e.value, "a0");
 		string line4 = "syscal";
 		code.push_back(line1);
 		code.push_back(line2);
@@ -151,7 +151,7 @@ void make_print(Element e) {
 	else if (e.type == FLOAT_TYPE) {
 		string line1 = "# PRINTF " + to_string(e.value); //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(to_string(e.value), "f0");
+		string line3 = gen_load_line_2(e.value, "f0");
 		string line4 = "syscal";
 		code.push_back(line1);
 		code.push_back(line2);
@@ -161,7 +161,7 @@ void make_print(Element e) {
 	else if (e.type == STRING_TYPE) {
 		string line1 = "# PRINT " + to_string(e.value); //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(to_string(e.value), "a)");
+		string line3 = gen_load_line_2(e.value, "a)");
 		string line4 = "syscal";
 		code.push_back(line1);
 		code.push_back(line2);
