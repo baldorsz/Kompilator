@@ -95,10 +95,8 @@ wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 wyrwpr	:	INPUTI '(' wyr ')'		{;}
 		|	INPUTF '(' wyr ')'		{;}
 		;
-wyrprz	:	INT ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
-		|	INT ID '=' wyrwpr			{;}
-		|	FLOAT ID '=' wyr			{;}
-		|	FLOAT ID '=' wyrwpr			{;}
+wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
+		|	ID '=' wyrwpr			{;}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
