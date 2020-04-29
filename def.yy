@@ -139,7 +139,7 @@ string gen_load_line_2(string i, string reg_name)
 
 void make_print(Element e) {
 	if(e.type == INT_TYPE) {
-		string line1 = "# printi " + to_string(e.value); //"1_ $t0 , __";
+		string line1 = "# printi " + e.value; //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
 		string line3 = gen_load_line_2(e.value, "a0");
 		string line4 = "syscal";
@@ -149,7 +149,7 @@ void make_print(Element e) {
 		code.push_back(line4);
 	}
 	else if (e.type == FLOAT_TYPE) {
-		string line1 = "# PRINTF " + to_string(e.value); //"1_ $t0 , __";
+		string line1 = "# PRINTF " + e.value; //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
 		string line3 = gen_load_line_2(e.value, "f0");
 		string line4 = "syscal";
@@ -159,7 +159,7 @@ void make_print(Element e) {
 		code.push_back(line4);
 	}
 	else if (e.type == STRING_TYPE) {
-		string line1 = "# PRINT " + to_string(e.value); //"1_ $t0 , __";
+		string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 		string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
 		string line3 = gen_load_line_2(e.value, "a)");
 		string line4 = "syscal";
