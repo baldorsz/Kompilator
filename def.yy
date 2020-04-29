@@ -176,7 +176,7 @@ void make_print(Element e) {
 void make_input_int(int v) {
 	string line1 = "#  inputi " + to_string(v);
 	string line2 = ".data\n"
-	string line3 = 0;
+	string line3 = " 0";
 }
 
 string gen_load_line(Element e, int regno)
