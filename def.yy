@@ -66,7 +66,7 @@ int	ival; float fval;};
 %token EQ LT GT NE
 %token INT FLOAT STRING
 %token INPUTI INPUTF
-%token PRINTI PRINTF
+%token PRINTI PRINTF PRINT
 %token IF ELSE WHILE
 %token DEF
 %left '+' '-'
