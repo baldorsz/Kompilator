@@ -90,7 +90,7 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' wyr ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
-		|	PRINT '(' STRING ')'	{make_print(Element(STRING_TYPE, to_string($3)));}
+		|	PRINT '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
 wyrwpr	:	INPUTI '(' wyr ')'		{;}
 		|	INPUTF '(' wyr ')'		{;}
