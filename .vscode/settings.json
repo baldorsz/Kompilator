@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "iosfwd": "cpp",
-        "*.yy": "cpp"
+        "*.yy": "cpp",
+        "bitset": "cpp"
     }
 }
