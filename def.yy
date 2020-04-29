@@ -137,8 +137,6 @@ string gen_load_line_2(string i, string reg_name)
 	return s.str();
 }
 
-void 
-
 void make_print(Element e) {
 	if(e.type == INT_TYPE) {
 		string line1 = "# printi " + to_string(e.value); //"1_ $t0 , __";
@@ -175,7 +173,7 @@ void make_print(Element e) {
 
 void make_input_int(int v) {
 	string line1 = "#  inputi " + to_string(v);
-	string line2 = ".data\n"
+	string line2 = ".data\n";
 	string line3 = " 0";
 }
 
