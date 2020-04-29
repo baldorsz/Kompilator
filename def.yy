@@ -93,11 +93,11 @@ wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
 		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
-wyrwpr	:	INPUTI '(' LC ')'		{;}
-		|	INPUTF '(' LR ')'		{;}
+wyrwpr	:	INPUTI '('')'			{;}
+		|	INPUTF '('')'			{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
-		|	ID '=' wyrwpr			{;}
+		|	ID '=' wyrwpr			{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, ); make_op('=', "sw")}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
@@ -248,7 +248,8 @@ int main(int argc, char *argv[])
 	{
 		yyin=fopen(argv[1],"r");//otwieramy pliki yyout, yyin
 	}
-	if((file = fopen("rpn.txt","w")) == NULL)
+	if((
+		 = fopen("rpn.txt","w")) == NULL)
 	{
 		printf("Nie mozna utworzyc pliku rpn.txt");
 		exit(1);
