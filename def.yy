@@ -97,7 +97,7 @@ wyrwpr	:	INPUTI '('')'			{;}
 		|	INPUTF '('')'			{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
-		|	ID '=' wyrwpr			{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE); make_op('=', "sw");}
+		|	ID '=' wyrwpr			{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0); make_op('=', "sw");}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
