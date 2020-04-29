@@ -96,10 +96,10 @@ wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 wyrwpr	:	INPUTI '('')'			{;}
 		|	INPUTF '('')'			{;}
 		;
-wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, to_string($2))); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
-		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, to_string($2))); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
-		|	FLOAT ID '=' wyr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, to_string($2))); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
-		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, to_string($2))); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
+wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
+		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
+		|	FLOAT ID '=' wyr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
+		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
