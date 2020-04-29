@@ -63,8 +63,9 @@ int	ival; float fval;};
 %token <text> ID
 %token <ival> LC
 %token <fval> LR
+%token <text> STRING
 %token EQ LT GT NE
-%token INT FLOAT STRING
+%token INT FLOAT
 %token INPUTI INPUTF
 %token PRINTI PRINTF PRINTS
 %token IF ELSE WHILE
