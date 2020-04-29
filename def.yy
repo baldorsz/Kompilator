@@ -93,8 +93,8 @@ wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
 		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
-wyrwpr	:	INPUTI '('')'			{;}
-		|	INPUTF '('')'			{;}
+wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
+		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
 		;
 wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
 		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
