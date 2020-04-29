@@ -66,7 +66,7 @@ int	ival; float fval;};
 %token EQ LT GT NE
 %token INT FLOAT STRING
 %token INPUTI INPUTF
-%token PRINTI PRINTF PRINT
+%token PRINTI PRINTF PRINTS
 %token IF ELSE WHILE
 %token DEF
 %left '+' '-'
@@ -90,10 +90,10 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
-		|	PRINT '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
+		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
-wyrwpr	:	INPUTI '(' wyr ')'		{;}
-		|	INPUTF '(' wyr ')'		{;}
+wyrwpr	:	INPUTI '(' LC ')'		{;}
+		|	INPUTF '(' R ')'		{;}
 		;
 wyrprz	:	ID '=' wyr				{fprintf(file, "%s =", $1); argstack.push(Element(ID, $1)); insert_symbol($1, INT_TYPE, 0);make_op('=', "sw");}
 		|	ID '=' wyrwpr			{;}
@@ -159,11 +159,18 @@ void make_print_int(Element e) {
 		code.push_back(line3);
 		code.push_back(line4);
 	}
+	else if (e.type == STRING_TYPE) {
+		string line1 = "# PRINT " + to_string(e.value); //"1_ $t0 , __";
+		string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
+		string line3 = gen_load_line_2(to_string(e.value), "a)");
+		string line4 = "syscal";
+		code.push_back(line1);
+		code.push_back(line2);
+		code.push_back(line3);
+		code.push_back(line4);
+	}
 }
 
-void make_print_float(float f) {
-	
-}
 
 void make_input_int(int v) {
 	string line1 = "#  inputi " + to_string(v);
