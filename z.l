@@ -33,7 +33,7 @@ int yyerror(const char *,...);
 "while"		{return WHILE;}
 "printi"	{return PRINTI;}
 "printf"	{return PRINTF;}
-"print"		{return PRINTS;}
+"prints"		{return PRINTS;}
 "inputi"	{return INPUTI;}
 "inputf"	{return INPUTF;}
 "def"		{return DEF;}
