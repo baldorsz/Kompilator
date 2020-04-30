@@ -88,6 +88,7 @@ wyrwhile	:	while_begin '{' program '}'	{;}
 while_begin	:	WHILE '(' wyrlog ')'		{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
+		|	wyrwyp ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
 		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
