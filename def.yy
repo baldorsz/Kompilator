@@ -90,9 +90,9 @@ while_begin	:	WHILE '(' wyrlog ')'		{;}
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
 		;
-wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
-		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
-		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
+wyrwyp	:	PRINTI '(' LC ')' 	{make_print(Element(INT_TYPE, to_string($3)));}
+		|	PRINTF '('LR')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
+		|	PRINTS '('STRING')'	{make_print(Element(STRING_TYPE, $3));}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}

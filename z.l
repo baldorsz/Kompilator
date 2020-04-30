@@ -33,7 +33,7 @@ int yyerror(const char *,...);
 "while"		{return WHILE;}
 "printi"	{return PRINTI;}
 "printf"	{return PRINTF;}
-"prints"		{return PRINTS;}
+"prints"	{return PRINTS;}
 "inputi"	{return INPUTI;}
 "inputf"	{return INPUTF;}
 "def"		{return DEF;}
@@ -42,7 +42,7 @@ int yyerror(const char *,...);
 (0|[1-9][0-9]*)\.[0-9]+		{yylval.fval = atof(yytext);return LR;}
 [A-Za-z_][A-Za-z0-9_]* 		{yylval.text = strdup(yytext);return ID;}
 \"([^\\\"]|\\.)*\"			{yylval.text = strdup(yytext);return STRING;}
-\ |\t			{;}
+\ |\t		{;}
 \n			{yylineno++;}
 .			{yyerror("Blad leksykalny\n");}
 %%
