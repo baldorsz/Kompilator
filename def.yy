@@ -97,9 +97,9 @@ wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
 		;
 wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
-		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
+		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
 		|	FLOAT ID '=' wyr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
-		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
+		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('p', "sw");}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
@@ -222,6 +222,13 @@ void make_op(char op, string mnemo)
 		code.push_back(line1);
 		code.push_back(line4);
 	}
+	else if(op == 'p')
+	{
+		string line1 = gen_load_line(op1, 0);
+		string line2 = "syscall\n"
+		string line3 = "sw $v0 , " + op2.value;
+
+	}
 	else
 	{
 		Element e = Element(ID, result_name);
@@ -260,7 +267,11 @@ int main(int argc, char *argv[])
 	toMars << ".data\n";
 	for(auto symbol:symbols)
 	{
-		toMars << symbol.first << ": " << symbol.second->type << " -- " << symbol.second->size << endl;
+		toMars << symbol.first << ": \t\t";
+		if(symbol.second->type == 1 || symbol.second->type == 2)
+		{
+			toMars << " .world " << symbol.second->size << endl;
+		}
 	}
 	toMars << "enter: .asciiz : \n";
 	toMars << ".text\n";
