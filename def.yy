@@ -45,7 +45,8 @@ const int ARRAY_FLOAT = 5;
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
-void make_print(Element e);
+void make_print(int type);
+void make_print_s(Element e);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
@@ -92,9 +93,9 @@ while_begin	:	WHILE '(' wyrlog ')'		{;}
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
 		;
-wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
-		|	PRINTF '(' wyr ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
-		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
+wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
+		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
+		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, $3));}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
@@ -142,36 +143,24 @@ string gen_load_line_2(string i, string reg_name)
 	return s.str();
 }
 
-void make_print(Element e) {
-	if(e.type == INT_TYPE) {
-		string line1 = "# printi " + e.value; //"1_ $t0 , __";
-		string line2 = gen_load_line_2(to_string(1), "v0"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(e.value, "a0");
-		string line4 = "syscal";
-		code.push_back(line1);
-		code.push_back(line2);
-		code.push_back(line3);
-		code.push_back(line4);
-	}
-	else if (e.type == FLOAT_TYPE) {
-		string line1 = "# PRINTF " + e.value; //"1_ $t0 , __";
-		string line2 = gen_load_line_2(to_string(2), "f12"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(e.value, "f0");
-		string line4 = "syscal";
-		code.push_back(line1);
-		code.push_back(line2);
-		code.push_back(line3);
-		code.push_back(line4);
-	}
-	else if (e.type == STRING_TYPE) {
-		string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
-		string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
-		string line3 = gen_load_line_2(e.value, "a)");
-		string line4 = "syscal";
-		code.push_back(line1);
-		code.push_back(line2);
-		code.push_back(line3);
-		code.push_back(line4);
+void make_print_s(Element e) {
+	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
+	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
+	string line3 = gen_load_line_2(e.value, "a)");
+	string line4 = "syscal";
+	code.push_back(line1);
+	code.push_back(line2);
+	code.push_back(line3);
+	code.push_back(line4);
+}
+
+void make_print(int type)
+{
+	Element op=argstack.top();
+	argstack.pop();
+	if(type == INT_TYPE)
+	{
+		
 	}
 }
 
@@ -280,7 +269,6 @@ int main(int argc, char *argv[])
 			toMars << " .float " << symbol.second->size << endl;
 		}
 	}
-	toMars << "enter: .asciiz : \n";
 	toMars << ".text\n";
 	for(auto line: code)
 	{
