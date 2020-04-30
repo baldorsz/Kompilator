@@ -225,7 +225,7 @@ void make_op(char op, string mnemo)
 	else if(op == 'p')
 	{
 		string line1 = gen_load_line(op1, 0);
-		string line2 = "syscall\n"
+		string line2 = "syscall\n";
 		string line3 = "sw $v0 , " + op2.value;
 
 	}
