@@ -39,6 +39,8 @@ const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
 const int STRING_TYPE = 3;
+const int ARRAY_INT = 4;
+const int ARRAY_FLOAT = 5;
 
 stack <Element> argstack;
 void make_op(char op, string mnemo);
@@ -90,9 +92,9 @@ while_begin	:	WHILE '(' wyrlog ')'		{;}
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
 		;
-wyrwyp	:	PRINTI '(' LC ')' 	{make_print(Element(INT_TYPE, to_string($3)));}
-		|	PRINTF '('LR')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
-		|	PRINTS '('STRING')'	{make_print(Element(STRING_TYPE, $3));}
+wyrwyp	:	PRINTI '(' LC ')' 		{make_print(Element(INT_TYPE, to_string($3)));}
+		|	PRINTF '(' LR ')'		{make_print(Element(FLOAT_TYPE, to_string($3)));}
+		|	PRINTS '(' STRING ')'	{make_print(Element(STRING_TYPE, $3));}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
@@ -269,9 +271,13 @@ int main(int argc, char *argv[])
 	for(auto symbol:symbols)
 	{
 		toMars << symbol.first << ": \t\t";
-		if(symbol.second->type == 1 || symbol.second->type == 2)
+		if(symbol.second->type == 1)
 		{
 			toMars << " .world " << symbol.second->size << endl;
+		}
+		else if(symbol.second->type == 2)
+		{
+			toMars << " .float " << symbol.second->size << endl;
 		}
 	}
 	toMars << "enter: .asciiz : \n";
