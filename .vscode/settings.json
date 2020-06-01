@@ -2,6 +2,9 @@
     "files.associations": {
         "iosfwd": "cpp",
         "*.yy": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "string": "cpp",
+        "filesystem": "cpp",
+        "functional": "cpp"
     }
 }

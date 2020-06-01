@@ -52,7 +52,7 @@ void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
 void insert_symbol_s(string symbol, int type, string value);
 void make_print(int type);
-void make_print_s(Element e);
+void make_print_s(Element e, string value);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
@@ -101,7 +101,7 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
-		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str")); insert_symbol_s("str", STRING_TYPE, $3);}
+		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str"), $3);}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
@@ -149,7 +149,10 @@ string gen_load_line_2(string i, string reg_name)
 	return s.str();
 }
 
-void make_print_s(Element e) {
+void make_print_s(Element e, string value) {
+	static int rCounter = 0;
+	string result_name = "str_" + to_string(rCounter);
+	insert_symbol_s(result_name, STRING_TYPE, $3);
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
 	string line3 = gen_load_line_2(e.value, "a0");
@@ -162,11 +165,39 @@ void make_print_s(Element e) {
 
 void make_print(int type)
 {
-	Element op=argstack.top();
-	argstack.pop();
+	if(argstack.top().type = ID) {
+		if(symbols[argstack.top().value].type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+	}
+	else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 	if(type == INT_TYPE)
 	{
-		
+		if(op.type == INT_TYPE) {
+			string line1 = "# PRINT " + op.value;
+			string line2 = gen_load_line_2(to_string(1), "v0");
+			string line3 = gen_load_line_2(argstack.top().value, "a0");
+			else string line3 = gen_load_line_2(argstack.top().value, "a0");
+			string line4 = "syscall";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
+		}
+	}
+	else if(type == FLOAT_TYPE) {
+		if(op.type == FLOAT_TYPE) {
+			static int rCounter = 0;
+			string result_name = "float_value_" + to_string(rCounter);
+			insert_symbol(result_name, FLOAT_TYPE, )
+			string line1 = "# PRINT " + op.value;
+			string line2 = gen_load_line_2(to_string(2), "v0");
+			string line3 = gen_load_line_2(op.value, "a0");
+			string line4 = "syscall";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
+			rCounter++;
+		}
 	}
 }
 
