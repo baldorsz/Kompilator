@@ -280,7 +280,7 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
-		if(op2.value == INT_TYPE) {
+		if(op2.type == INT_TYPE) {
 			string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
 			string line4 = "sw $t0 , " + op2.value;
 			code.push_back(line1);
