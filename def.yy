@@ -153,7 +153,7 @@ string gen_load_line_2(string i, string reg_name)
 void make_print_s(Element e, string value) {
 	static int rCounter = 0;
 	string result_name = "str_" + to_string(rCounter);
-	insert_symbol_s(result_name, STRING_TYPE, $3);
+	insert_symbol_s(result_name, STRING_TYPE, value);
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
 	string line3 = gen_load_line_2(e.value, "a0");
@@ -177,7 +177,7 @@ void make_print(int type)
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type = ID) {
-		if(symbols[argstack.top().value].second.type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+		if(symbols[argstack.top().value]->type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 		else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(1), "v0");
@@ -192,7 +192,7 @@ void make_print(int type)
 	}
 	else if(type == FLOAT_TYPE) {
 			if(argstack.top().type = ID) {
-			if(symbols[argstack.top().value]second.type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
+			if(symbols[argstack.top().value]->type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			else if(argstack.top().type == LC) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(2), "v0");
