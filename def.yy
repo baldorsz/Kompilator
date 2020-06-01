@@ -50,6 +50,7 @@ const int ARRAY_FLOAT = 5;
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
+void insert_symbol_s(string symbol, int type, string value);
 void make_print(int type);
 void make_print_s(Element e);
 void make_input_int(int v);
