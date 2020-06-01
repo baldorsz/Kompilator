@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
 		}
 		else if(symbol.second->type == 3)
 		{
-			toMars << " .asciiz " << symbol.second->size << endl;
+			toMars << " .asciiz " << symbol.second->value << endl;
 		}
 	}
 	toMars << ".text\n";
