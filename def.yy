@@ -100,7 +100,7 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
-		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str")); insert_symbol("str", STRING_TYPE, $3);}
+		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str")); insert_symbol_s("str", STRING_TYPE, $3);}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
@@ -199,7 +199,7 @@ void insert_symbol(string symbol, int type, int size)
 	}
 }
 
-void insert_symbol(string symbol, int type, string value)
+void insert_symbol_s(string symbol, int type, string value)
 {
 	if(symbols.find(symbol) == symbols.end()) {
 		symbols[symbol] = new Symbol_Info(type, value);
