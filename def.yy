@@ -199,6 +199,13 @@ void insert_symbol(string symbol, int type, int size)
 	}
 }
 
+void insert_symbol(string symbol, int type, string value)
+{
+	if(symbols.find(symbol) == symbols.end()) {
+		symbols[symbol] = new Symbol_Info(type, value);
+	}
+}
+
 void make_op(char op, string mnemo)
 {
 	static int rCounter = 0;
