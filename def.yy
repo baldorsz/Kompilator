@@ -198,9 +198,7 @@ void make_print(int type)
 			string line2 = gen_load_line_2(to_string(2), "v0");
 			string line3 = "l.s $f12, ";
 			if(argstack.top().type == ID) line3 += argstack.top().value;
-			else (
-				line3 += getFloatName(argstack.top().value);
-			)
+			else line3 += getFloatName(argstack.top().value);
 			string line4 = "syscall";
 			code.push_back(line1);
 			code.push_back(line2);
