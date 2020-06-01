@@ -60,6 +60,7 @@ void make_input_float(float f);
 void make_array(string, int, int);
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
+string gen_load_line_f(Element e, int regno);
 string gen_load_line_2(string i, string reg_name);
 stringstream cs;
 
@@ -94,9 +95,14 @@ linia	:	wyrsred					{;}
 		|	wyrwhile				{;}
 		;
 wyrif	:	if_begin '{' program '}'		{;}
+		|	else_begin '{' program '}'		{;}
 		;
+else_begin	:	if_begin '{' program '}' ELSE	{;}
+			;
 if_begin	:	IF '(' wyrlog ')'			{;}
+			;
 wyrwhile	:	while_begin '{' program '}'	{;}
+			;
 while_begin	:	WHILE '(' wyrlog ')'		{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
@@ -151,6 +157,8 @@ string gen_load_line_2(string i, string reg_name)
 	s << "$" << reg_name << " , " << i;
 	return s.str();
 }
+
+
 
 void make_print_s(Element e, string value) {
 	static int strCounter = 0;
@@ -249,6 +257,14 @@ void insert_symbol_s(string symbol, int type, string value)
 	}
 }
 
+string gen_load_line_f(Element e, string reg_name)
+{
+	stringstream s;
+	
+	s << "l.s $f0" << " , " << e.value;
+	return s.str();
+}
+
 void make_op(char op, string mnemo)
 {
 	static int rCounter = 0;
@@ -264,10 +280,18 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
-		string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
-		string line4 = "sw $t0 , " + op2.value;
-		code.push_back(line1);
-		code.push_back(line4);
+		if(op2.value == INT_TYPE) {
+			string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+			string line4 = "sw $t0 , " + op2.value;
+			code.push_back(line1);
+			code.push_back(line4);
+		}
+		else {
+			string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
+			string line4 = "s.s $f0 , " + op2.value;
+			code.push_back(line1);
+			code.push_back(line4);
+		}
 	}
 	else if(op == 'p')
 	{
