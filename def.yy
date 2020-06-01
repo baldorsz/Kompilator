@@ -95,7 +95,7 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
-		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, $3));}
+		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, $3)); insert_symbol($3, STRING_TYPE, 0);}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
@@ -146,7 +146,7 @@ string gen_load_line_2(string i, string reg_name)
 void make_print_s(Element e) {
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
-	string line3 = gen_load_line_2(e.value, "a)");
+	string line3 = gen_load_line_2(e.value, "a0");
 	string line4 = "syscal";
 	code.push_back(line1);
 	code.push_back(line2);
@@ -267,6 +267,10 @@ int main(int argc, char *argv[])
 		else if(symbol.second->type == 2)
 		{
 			toMars << " .float " << symbol.second->size << endl;
+		}
+		else if(symbol.second->type == 3)
+		{
+			toMars << " .asciiz " << symbol.second->size << endl;
 		}
 	}
 	toMars << ".text\n";
