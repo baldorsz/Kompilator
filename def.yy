@@ -47,6 +47,8 @@ const int STRING_TYPE = 3;
 const int ARRAY_INT = 4;
 const int ARRAY_FLOAT = 5;
 
+int float_num = 0;
+
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
@@ -130,7 +132,7 @@ skladnik
 czynnik
 		:	ID						{fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
 		|	LC						{fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
-		|	LR						{fprintf(file, " %f", $1); argstack.push(Element(LR, to_string($1)));}
+		|	LR						{fprintf(file, " %f", $1); float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(LR, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
@@ -151,8 +153,8 @@ string gen_load_line_2(string i, string reg_name)
 }
 
 void make_print_s(Element e, string value) {
-	static int rCounter = 0;
-	string result_name = "str_" + to_string(rCounter);
+	static int strCounter = 0;
+	string result_name = "str_" + to_string(strCounter);
 	insert_symbol_s(result_name, STRING_TYPE, value);
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
@@ -162,6 +164,7 @@ void make_print_s(Element e, string value) {
 	code.push_back(line2);
 	code.push_back(line3);
 	code.push_back(line4);
+	strCounter++;
 }
 
 string getFloatName(string arg){
