@@ -177,7 +177,7 @@ void make_print(int type)
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type = ID) {
-		if(symbols[argstack.top().value].type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+		if(symbols[argstack.top().value].second.type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 		else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(1), "v0");
@@ -192,7 +192,7 @@ void make_print(int type)
 	}
 	else if(type == FLOAT_TYPE) {
 			if(argstack.top().type = ID) {
-			if(symbols[argstack.top().value].type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
+			if(symbols[argstack.top().value]second.type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			else if(argstack.top().type == LC) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(2), "v0");
