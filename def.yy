@@ -171,7 +171,6 @@ void make_print(int type)
 	else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 	if(type == INT_TYPE)
 	{
-		if(op.type == INT_TYPE) {
 			string line1 = "# PRINT " + op.value;
 			string line2 = gen_load_line_2(to_string(1), "v0");
 			string line3 = gen_load_line_2(argstack.top().value, "a0");
@@ -181,10 +180,9 @@ void make_print(int type)
 			code.push_back(line2);
 			code.push_back(line3);
 			code.push_back(line4);
-		}
 	}
 	else if(type == FLOAT_TYPE) {
-		if(op.type == FLOAT_TYPE) {
+		
 			static int rCounter = 0;
 			string result_name = "float_value_" + to_string(rCounter);
 			insert_symbol(result_name, FLOAT_TYPE, )
@@ -197,7 +195,6 @@ void make_print(int type)
 			code.push_back(line3);
 			code.push_back(line4);
 			rCounter++;
-		}
 	}
 }
 
