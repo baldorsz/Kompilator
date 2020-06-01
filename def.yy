@@ -28,9 +28,14 @@ class Symbol_Info {
 public:
 	int type;
 	int size;
+	string value;
 	Symbol_Info(int type, int size) {
 		this->type = type;
 		this->size = size;
+	}
+	Symbol_Info(int type, string value) {
+		this->type = type;
+		this->value = value;
 	}
 };
 vector <string> code;
@@ -95,7 +100,7 @@ wyrsred	:	wyrprz ';'				{;}
 		;
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
-		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, $3)); insert_symbol("str", STRING_TYPE, 0);}
+		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str")); insert_symbol("str", STRING_TYPE, $3);}
 		;
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
