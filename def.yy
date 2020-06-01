@@ -61,7 +61,7 @@ void make_array(string, int, int);
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
-string gen_load_line_2(string i, string reg_name);
+string gen_load_line_2(string i, int reg_name);
 stringstream cs;
 
 FILE *file;
@@ -257,10 +257,9 @@ void insert_symbol_s(string symbol, int type, string value)
 	}
 }
 
-string gen_load_line_f(Element e, string reg_name)
+string gen_load_line_f(Element e, int reg_name)
 {
 	stringstream s;
-	
 	s << "l.s $f0" << " , " << e.value;
 	return s.str();
 }
