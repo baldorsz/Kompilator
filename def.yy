@@ -183,7 +183,6 @@ void make_print(int type)
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(1), "v0");
 			string line3 = gen_load_line_2(argstack.top().value, "a0");
-			else string line3 = gen_load_line_2(argstack.top().value, "a0");
 			string line4 = "syscall";
 			code.push_back(line1);
 			code.push_back(line2);
