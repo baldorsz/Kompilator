@@ -56,6 +56,7 @@ void make_print_s(Element e, string value);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
+string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_2(string i, string reg_name);
 stringstream cs;
@@ -163,15 +164,22 @@ void make_print_s(Element e, string value) {
 	code.push_back(line4);
 }
 
+string getFloatName(string arg){
+	for(auto symbol: symbols)
+	{
+		if (symbol.second->value == arg)
+        return symbol.first;
+	}
+}
+
 void make_print(int type)
 {
-	if(argstack.top().type = ID) {
-		if(symbols[argstack.top().value].type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
-	}
-	else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 	if(type == INT_TYPE)
 	{
-			string line1 = "# PRINT " + op.value;
+		if(argstack.top().type = ID) {
+		if(symbols[argstack.top().value].type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+		else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(1), "v0");
 			string line3 = gen_load_line_2(argstack.top().value, "a0");
 			else string line3 = gen_load_line_2(argstack.top().value, "a0");
@@ -180,21 +188,25 @@ void make_print(int type)
 			code.push_back(line2);
 			code.push_back(line3);
 			code.push_back(line4);
+			argstack.pop();
 	}
 	else if(type == FLOAT_TYPE) {
-		
-			static int rCounter = 0;
-			string result_name = "float_value_" + to_string(rCounter);
-			insert_symbol(result_name, FLOAT_TYPE, )
-			string line1 = "# PRINT " + op.value;
+			if(argstack.top().type = ID) {
+			if(symbols[argstack.top().value].type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
+			else if(argstack.top().type == LC) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
+			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(2), "v0");
-			string line3 = gen_load_line_2(op.value, "a0");
+			string line3 = "l.s $f12, ";
+			if(argstack.top().type == ID) line3 += argstack.top().value;
+			else (
+				line3 += getFloatName(argstack.top().value);
+			)
 			string line4 = "syscall";
 			code.push_back(line1);
 			code.push_back(line2);
 			code.push_back(line3);
 			code.push_back(line4);
-			rCounter++;
+			argstack.pop();
 	}
 }
 
