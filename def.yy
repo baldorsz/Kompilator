@@ -298,6 +298,9 @@ void make_op(char op, string mnemo)
 			string line1 = gen_load_line(op1, 5);
 			string line2 = "syscall\n";
 			string line3 = "sw $v0 , " + op2.value;
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
 		}
 		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
 	}
@@ -306,6 +309,9 @@ void make_op(char op, string mnemo)
 			string line1 = gen_load_line(op1, 6);
 			string line2 = "syscall";
 			string line3 = "s.s $f0 " + op2.value;
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
 		}
 
 	}
@@ -333,7 +339,7 @@ void make_op(char op, string mnemo)
 			yyerror("Błąd! Niemożliwa konwersja int na float.");
 		}
 		else if(op1.type == INT_TYPE && op2.type == FLOAT_TYPE) {
-			
+
 		}
 	}
 	rCounter++;
