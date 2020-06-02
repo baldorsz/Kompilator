@@ -296,7 +296,7 @@ void make_op(char op, string mnemo)
 	{
 		if(op1.type == LC) {
 			string line1 = gen_load_line(op1, 5);
-			string line2 = "syscall\n";
+			string line2 = "syscall";
 			string line3 = "sw $v0 , " + op2.value;
 			code.push_back(line1);
 			code.push_back(line2);
@@ -317,7 +317,7 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
-		if(op1.type == INT_TYPE && op2.type == INT_TYPE)
+		if(op1.type == LC && op2.type == INT_TYPE)
 		{
 			Element e = Element(ID, result_name);
 			argstack.push(e);
@@ -335,7 +335,7 @@ void make_op(char op, string mnemo)
 			// code.push_back("la $a0 , enter");
 			// code.push_back("syscall");
 		}
-		else if(op1.type == FLOAT_TYPE && op2.type == INT_TYPE) {
+		else if(op1.type == LR && op2.type == INT_TYPE) {
 			yyerror("Błąd! Niemożliwa konwersja int na float.");
 		}
 		else if(op1.type == INT_TYPE && op2.type == FLOAT_TYPE) {
