@@ -285,7 +285,7 @@ void make_op(char op, string mnemo)
 			code.push_back(line1);
 			code.push_back(line4);
 		}
-		else {
+		else if(op2.type == FLOAT_TYPE) {
 			string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
 			string line4 = "s.s $f0 , " + op2.value;
 			code.push_back(line1);
@@ -317,7 +317,7 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
-		if(op1.type == LC && op2.type == INT_TYPE)
+		if(op1.type == LC && (p2.type == INT_TYPE || op2.type == LC))
 		{
 			Element e = Element(ID, result_name);
 			argstack.push(e);
@@ -335,11 +335,13 @@ void make_op(char op, string mnemo)
 			// code.push_back("la $a0 , enter");
 			// code.push_back("syscall");
 		}
-		else if(op1.type == LR && op2.type == INT_TYPE) {
+		else if(op1.type == LC && (op2.type == FLOAT_TYPE || op2.type == LR)) {
 			yyerror("Błąd! Niemożliwa konwersja int na float.");
 		}
-		else if(op1.type == INT_TYPE && op2.type == FLOAT_TYPE) {
-
+		else if(op1.type == LR&& op2.type == FLOAT_TYPE) {
+			Element e = Element(ID, result_name);
+			argstack.push(e);
+			insert_symbol(e.value, FLOAT_TYPE, )
 		}
 	}
 	rCounter++;
