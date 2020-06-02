@@ -317,7 +317,7 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
-		if(op1.type == LC && (p2.type == INT_TYPE || op2.type == LC))
+		if(op1.type == LC && (op2.type == INT_TYPE || op2.type == LC))
 		{
 			Element e = Element(ID, result_name);
 			argstack.push(e);
@@ -341,7 +341,7 @@ void make_op(char op, string mnemo)
 		else if(op1.type == LR&& op2.type == FLOAT_TYPE) {
 			Element e = Element(ID, result_name);
 			argstack.push(e);
-			insert_symbol(e.value, FLOAT_TYPE, )
+			insert_symbol(e.value, FLOAT_TYPE, 0);
 		}
 	}
 	rCounter++;
