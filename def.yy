@@ -118,7 +118,7 @@ wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
 		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
 		|	FLOAT ID '=' wyr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
-		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('p', "sw");}
+		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
@@ -294,28 +294,47 @@ void make_op(char op, string mnemo)
 	}
 	else if(op == 'p')
 	{
-		string line1 = gen_load_line(op1, 0);
-		string line2 = "syscall\n";
-		string line3 = "sw $v0 , " + op2.value;
+		if(op1.type == INT_TYPE) {
+			string line1 = gen_load_line(op1, 5);
+			string line2 = "syscall\n";
+			string line3 = "sw $v0 , " + op2.value;
+		}
+		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
+	}
+	else if(op == 'f') {
+		if(op1.type == FLOAT_TYPE) {
+			string line1 = gen_load_line(op1, 6);
+			string line2 = "syscall";
+			string line3 = "s.s $f0 " + op2.value;
+		}
 
 	}
 	else
 	{
-		Element e = Element(ID, result_name);
-		argstack.push(e);
-		insert_symbol(e.value, INT_TYPE, 1);
-		string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
-		string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
-		string line3 = mnemo + " $t0 , $t0 , $t1";
-		string line4 = "sw $t0 , " + result_name;
+		if(op1.type == INT_TYPE && op2.type == INT_TYPE)
+		{
+			Element e = Element(ID, result_name);
+			argstack.push(e);
+			insert_symbol(e.value, INT_TYPE, 1);
+			string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
+			string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
+			string line3 = mnemo + " $t0 , $t0 , $t1";
+			string line4 = "sw $t0 , " + result_name;
 
-		code.push_back(line1);
-		code.push_back(line2);
-		code.push_back(line3);
-		code.push_back(line4);
-		code.push_back("li $v0 , 4");
-		code.push_back("la $a0 , enter");
-		code.push_back("syscall");
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
+			// code.push_back("li $v0 , 4");
+			// code.push_back("la $a0 , enter");
+			// code.push_back("syscall");
+		}
+		else if(op1.type == FLOAT_TYPE && op2.type == INT_TYPE) {
+			yyerror("Błąd! Niemożliwa konwersja int na float.");
+		}
+		else if(op1.type == INT_TYPE && op2.type == FLOAT_TYPE) {
+			Element e = Element()
+		}
 	}
 	rCounter++;
 
