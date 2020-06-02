@@ -333,7 +333,7 @@ void make_op(char op, string mnemo)
 			yyerror("Błąd! Niemożliwa konwersja int na float.");
 		}
 		else if(op1.type == INT_TYPE && op2.type == FLOAT_TYPE) {
-			Element e = Element()
+			
 		}
 	}
 	rCounter++;
