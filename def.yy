@@ -294,7 +294,7 @@ void make_op(char op, string mnemo)
 	}
 	else if(op == 'p')
 	{
-		if(op1.type == INT_TYPE) {
+		if(op1.type == LC) {
 			string line1 = gen_load_line(op1, 5);
 			string line2 = "syscall\n";
 			string line3 = "sw $v0 , " + op2.value;
@@ -305,7 +305,7 @@ void make_op(char op, string mnemo)
 		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
 	}
 	else if(op == 'f') {
-		if(op1.type == FLOAT_TYPE) {
+		if(op1.type == LR) {
 			string line1 = gen_load_line(op1, 6);
 			string line2 = "syscall";
 			string line3 = "s.s $f0 " + op2.value;
