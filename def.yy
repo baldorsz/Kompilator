@@ -279,9 +279,14 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
-		if(op1.type == ID) {
-			if(symbols[op1.value]->type == INT_TYPE) {
-				
+		if(op2.type == ID) {
+			printf("op2 == ID");
+			if(symbols[op2.value]->type == INT_TYPE && op1.type == LC) {
+				printf("int do zmiennej int");
+				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+				string line4 = "sw $t0 , " + op2.value;
+				code.push_back(line1);
+				code.push_back(line4);
 			}
 		}
 		// if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
