@@ -302,29 +302,13 @@ void make_op(char op, string mnemo)
 				code.push_back(line2);
 				code.push_back(line3);
 			}
-			else if(symbols[op2.value]->type == FLOAT_TYPE && (op1.type == ID && symbols[op1.value]->type == INT_TYPE)) {
-				printf("%s\n\n", op1.value);
-				string line1 = "li $t0, ";
-			}
 			else yyerror("Błąd przypisania!");
 		}
 		else yyerror("Błąd przypisania. Musisz przypisać liczbe do zmiennej!");
-		// if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
-		// 	string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
-		// 	string line4 = "sw $t0 , " + op2.value;
-		// 	code.push_back(line1);
-		// 	code.push_back(line4);
-		// }
-		// else if(op2.type == LR && (op1.type == FLOAT_TYPE || op1.type == LR)) {
-		// 	string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
-		// 	string line4 = "s.s $f0 , " + op2.value;
-		// 	code.push_back(line1);
-		// 	code.push_back(line4);
-		// }
 	}
 	else if(op == 'p')
 	{
-		if(op1.type == LC) {
+		if(symbols[op2.value]->type == INT_TYPE) {
 			string line1 = gen_load_line(op1, 5);
 			string line2 = "syscall";
 			string line3 = "sw $v0 , " + op2.value;
@@ -335,7 +319,7 @@ void make_op(char op, string mnemo)
 		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
 	}
 	else if(op == 'f') {
-		if(op1.type == LR) {
+		if(symbols[op2.value]->type == FLOAT_TYPE) {
 			string line1 = gen_load_line(op1, 6);
 			string line2 = "syscall";
 			string line3 = "s.s $f0 " + op2.value;
