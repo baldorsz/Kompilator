@@ -288,7 +288,7 @@ void make_op(char op, string mnemo)
 				code.push_back(line1);
 				code.push_back(line4);
 			}
-			else if(symbols[op2.value]->type == FLOAT_TYPE && op1.type == LR) {
+			else if(symbols[op2.value]->type == FLOAT_TYPE && (op1.type == LR || (op1.type == ID && symbols[op1.value]->type == FLOAT_TYPE))) {
 				string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
@@ -301,6 +301,10 @@ void make_op(char op, string mnemo)
 				code.push_back(line1);
 				code.push_back(line2);
 				code.push_back(line3);
+			}
+			else if(symbols[op2.value]->type == FLOAT_TYPE && (op1.type == ID && symbols[op1.value]->type == INT_TYPE)) {
+				printf("%s\n\n", op1.value);
+				string line 1 = "li $t0, " + ;
 			}
 			else yyerror("Błąd przypisania!");
 		}
