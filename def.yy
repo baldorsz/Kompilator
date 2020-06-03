@@ -281,8 +281,8 @@ void make_op(char op, string mnemo)
 	{
 		if(op2.type == ID) {
 			printf("op2 == ID");
-			if(symbols[op2.value]->type == INT_TYPE && op1.type == LC) {
-				printf("int do zmiennej int");
+			if(symbols[op2.value]->type == INT_TYPE && (op1.type == LC || (op1.type == ID && symbols[op1.value]->type == INT_TYPE)) {
+				printf("int do zmiennej int\n");
 				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
 				string line4 = "sw $t0 , " + op2.value;
 				code.push_back(line1);
@@ -304,6 +304,7 @@ void make_op(char op, string mnemo)
 			}
 			else yyerror("Błąd przypisania!");
 		}
+		else yyerror("Błąd przypisania. Musisz przypisać liczbe do zmiennej!");
 		// if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
 		// 	string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
 		// 	string line4 = "sw $t0 , " + op2.value;
