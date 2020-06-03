@@ -115,10 +115,10 @@ wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
 		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
 		;
-wyrprz	:	INT ID '=' wyr			{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
-		|	INT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
-		|	FLOAT ID '=' wyr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
-		|	FLOAT ID '=' wyrwpr		{fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
+wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
+		|	INT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
+		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
+		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
 wyrlog	: 	wyr EQ wyr				{;}
 		|	wyr NE wyr				{;}
@@ -136,9 +136,9 @@ skladnik
 		|	czynnik					{fprintf(file, " ");}
 		;
 czynnik
-		:	ID						{fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
-		|	LC						{fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
-		|	LR						{fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(LR, to_string($1)));}
+		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
+		|	LC						{printf("LC\n"); fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
+		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(LR, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
@@ -188,7 +188,7 @@ void make_print(int type)
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type = ID) {
-		if(symbols[argstack.top().value]->type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
+			if(symbols[argstack.top().value]->type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 		}
 		else if(argstack.top().type == LR) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 			string line1 = "# PRINT " + argstack.top().value;
@@ -279,18 +279,23 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
-		if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
-			string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
-			string line4 = "sw $t0 , " + op2.value;
-			code.push_back(line1);
-			code.push_back(line4);
+		if(op1.value == ID) {
+			if(symbols[op1.value]->type == INT_TYPE && ) {
+				
+			}
 		}
-		else if(op2.type == LR && (op1.type == FLOAT_TYPE || op1.type == LR)) {
-			string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
-			string line4 = "s.s $f0 , " + op2.value;
-			code.push_back(line1);
-			code.push_back(line4);
-		}
+		// if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
+		// 	string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+		// 	string line4 = "sw $t0 , " + op2.value;
+		// 	code.push_back(line1);
+		// 	code.push_back(line4);
+		// }
+		// else if(op2.type == LR && (op1.type == FLOAT_TYPE || op1.type == LR)) {
+		// 	string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
+		// 	string line4 = "s.s $f0 , " + op2.value;
+		// 	code.push_back(line1);
+		// 	code.push_back(line4);
+		// }
 	}
 	else if(op == 'p')
 	{
