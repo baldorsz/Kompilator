@@ -304,7 +304,7 @@ void make_op(char op, string mnemo)
 			}
 			else if(symbols[op2.value]->type == FLOAT_TYPE && (op1.type == ID && symbols[op1.value]->type == INT_TYPE)) {
 				printf("%s\n\n", op1.value);
-				string line1 = "li $t0, " + ;
+				string line1 = "li $t0, ";
 			}
 			else yyerror("Błąd przypisania!");
 		}
