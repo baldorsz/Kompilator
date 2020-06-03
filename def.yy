@@ -288,6 +288,21 @@ void make_op(char op, string mnemo)
 				code.push_back(line1);
 				code.push_back(line4);
 			}
+			else if(symbols[op2.value]->type == FLOAT_TYPE && op1.type == LR) {
+				string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
+				string line4 = "s.s $f0 , " + op2.value;
+				code.push_back(line1);
+				code.push_back(line4);
+			}
+			else if(symbols[op2.value]->type == FLOAT_TYPE && op1.type == LC) {
+				string line1 = "li $t0, " + op1.value + "\n";
+				string line2 = "mtc1 $t0, $f0\n";
+				string line3 = "s.s $f1, " + op1.value + "\n";
+				code.push_back(line1);
+				code.push_back(line2);
+				code.push_back(line3);
+			}
+			else yyerror("Błąd przypisania!");
 		}
 		// if(op2.type == LC && (op1.type == INT_TYPE || op1.type == LC)) {
 		// 	string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
