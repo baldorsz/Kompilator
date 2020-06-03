@@ -138,7 +138,7 @@ skladnik
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
 		|	LC						{printf("LC\n"); fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
-		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(LR, to_string($1)));}
+		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, "to_string($1)"); argstack.push(Element(LR, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
