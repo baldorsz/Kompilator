@@ -279,7 +279,7 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
-		if(op1.value == ID) {
+		if(op1.type == ID) {
 			if(symbols[op1.value]->type == INT_TYPE) {
 				
 			}
