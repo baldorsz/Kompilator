@@ -30,12 +30,12 @@ public:
 	int size;
 	string value;
 	Symbol_Info(int type, int size) {
-		cout << "size";
+		
 		this->type = type;
 		this->size = size;
 	}
 	Symbol_Info(int type, string value) {
-		cout << "value";
+		
 		this->type = type;
 		this->value = value;
 	}
@@ -140,7 +140,7 @@ skladnik
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(ID, $1));}
 		|	LC						{printf("LC\n"); fprintf(file, " %d ", $1); argstack.push(Element(LC, to_string($1)));}
-		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, "to_string($1)"); argstack.push(Element(LR, to_string($1)));}
+		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(LR, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
@@ -254,9 +254,9 @@ void insert_symbol(string symbol, int type, int size)
 
 void insert_symbol_s(string symbol, int type, string value)
 {
-	cout << "insert_s\n";
+
 	if(symbols.find(symbol) == symbols.end()) {
-		cout << "done\n";
+		
 		symbols[symbol] = new Symbol_Info(type, value);
 	}
 }
@@ -301,10 +301,12 @@ void make_op(char op, string mnemo)
 			else if(symbols[op2.value]->type == FLOAT_TYPE && op1.type == LC) {
 				string line1 = "li $t0, " + op1.value + "\n";
 				string line2 = "mtc1 $t0, $f0\n";
-				string line3 = "s.s $f1, " + op1.value + "\n";
+				string line3 = "cvt.s.w $f1, $f0";
+				string line4 = "s.s $f1, " + op1.value + "\n";
 				code.push_back(line1);
 				code.push_back(line2);
 				code.push_back(line3);
+				code.push_back(line4);
 			}
 			else yyerror("Błąd przypisania! Zmienne, ktre chcesz przypisać są innego typu niż to możliwe!");
 		}
@@ -331,19 +333,19 @@ void make_op(char op, string mnemo)
 			code.push_back(line2);
 			code.push_back(line3);
 		}
-
+		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
 	}
 	else
 	{
-		if(op1.type == LC && (op2.type == INT_TYPE || op2.type == LC))
+		if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE))
 		{
 			Element e = Element(ID, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, INT_TYPE, 1);
 			string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
 			string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
-			string line3 = mnemo + " $t0 , $t0 , $t1";
-			string line4 = "sw $t0 , " + result_name;
+			string line3 = mnemo + " $t0 , $t0 , $t1\n";
+			string line4 = "sw $t0 , " + result_name + "\n";
 
 			code.push_back(line1);
 			code.push_back(line2);
@@ -353,13 +355,34 @@ void make_op(char op, string mnemo)
 			// code.push_back("la $a0 , enter");
 			// code.push_back("syscall");
 		}
-		else if(op1.type == LC && (op2.type == FLOAT_TYPE || op2.type == LR)) {
-			yyerror("Błąd! Niemożliwa konwersja int na float.");
+		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+			string line1 = gen_load_line_f(op1, 0); //"1_ $t0 , __";
+			string line2 = gen_load_line_f(op2, 1);
+			string line3 = mnemo + ".s $f0 , $f0 , $f1\n";
+			string line4 = "s.s $f0 , " + result_name + "\n";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
 		}
-		else if(op1.type == LR&& op2.type == FLOAT_TYPE) {
-			Element e = Element(ID, result_name);
-			argstack.push(e);
-			insert_symbol(e.value, FLOAT_TYPE, 1);
+		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE)) {
+			string line1 = "li $t0, " + op1.value + "\n";
+			string line2 = "mtc1 $t0, $f0\n";
+			string line3 = "cvt.s.w $f1, $f0\n";
+			string line4 = "s.s $f1, " + op1.value + "\n";
+			string line5 = gen_load_line_f(op2, 2);
+			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
+			string line7 = "s.s $f1 , " + result_name + "\n";
+		}
+		else if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+			string line1 = "li $t0, " + op2.value + "\n";
+			string line2 = "mtc1 $t0, $f0\n";
+			string line3 = "cvt.s.w $f1, $f0\n";
+			string line4 = gen_load_line_f(op2, 2);
+			string line3 = "s.s $f1, " + op2.value + "\n";
+			string line4 = gen_load_line_f(op2, 2);
+			string line3 = mnemo + ".s $f1 , $f1 , $f2\n";
+			string line4 = "s.s $f1 , " + result_name + "\n";
 		}
 	}
 	rCounter++;
