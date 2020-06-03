@@ -252,7 +252,9 @@ void insert_symbol(string symbol, int type, int size)
 
 void insert_symbol_s(string symbol, int type, string value)
 {
+	cout << "insert_s\n";
 	if(symbols.find(symbol) == symbols.end()) {
+		cout << "done\n";
 		symbols[symbol] = new Symbol_Info(type, value);
 	}
 }
@@ -302,7 +304,7 @@ void make_op(char op, string mnemo)
 				code.push_back(line2);
 				code.push_back(line3);
 			}
-			else yyerror("Błąd przypisania!");
+			else yyerror("Błąd przypisania! Zmienne, ktre chcesz przypisać są innego typu niż to możliwe!");
 		}
 		else yyerror("Błąd przypisania. Musisz przypisać liczbe do zmiennej!");
 	}
