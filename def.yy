@@ -280,7 +280,7 @@ void make_op(char op, string mnemo)
 	if (op == '=')
 	{
 		if(op1.value == ID) {
-			if(symbols[op1.value]->type == INT_TYPE && ) {
+			if(symbols[op1.value]->type == INT_TYPE) {
 				
 			}
 		}
