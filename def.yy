@@ -30,10 +30,12 @@ public:
 	int size;
 	string value;
 	Symbol_Info(int type, int size) {
+		cout << "size";
 		this->type = type;
 		this->size = size;
 	}
 	Symbol_Info(int type, string value) {
+		cout << "value";
 		this->type = type;
 		this->value = value;
 	}
