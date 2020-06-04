@@ -160,7 +160,7 @@ Element find_element(string name) {
 	{
 		yyerror("Błąd w deklaracji!");
 	}
-	return &it->second;
+	return it->second*;
 }
 
 void ifbegin() {
