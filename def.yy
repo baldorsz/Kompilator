@@ -410,7 +410,8 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
-		cout << "other";
+		cout << "other\n";
+		cout << "other\n";
 		if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE))
 		{
 			cout << "int & int\n";
