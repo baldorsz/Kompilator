@@ -183,10 +183,10 @@ void whileBegin() {
 	code.push_back("label"+to_string(lblCounter)+":");
 	lblCounter++;
 
-	if(argstack.top().type == FLOAT)
-	{
+	// if(argstack.top().type == FLOAT)
+	// {
 
-	}
+	// }
 }
 
 void ifbegin() {
