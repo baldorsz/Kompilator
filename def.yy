@@ -156,7 +156,7 @@ czynnik
 %%
 Element find_element(string name) {
 	if(symbols.find(name) != symbols.end()) {
-		return symbols[name].second;
+		return symbols[name]->second;
 	}
 	else yyerror("Dana zmienna już została zadeklarowana!");
 }
