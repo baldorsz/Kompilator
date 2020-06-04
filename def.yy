@@ -136,10 +136,15 @@ wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); a
 		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
-wyrlog	: 	wyr EQ wyr				{logic.push("==");}
-		|	wyr NE wyr				{logic.push("!=");}
-		| 	wyr LT wyr				{logic.push("<");}
-		|	wyr GT wyr				{logic.push(">");}
+wyrlog	: 	wyr LOGIC wyr				{;}
+		|	wyr LOGIC wyr				{;}
+		| 	wyr LOGIC wyr				{;}
+		|	wyr LOGIC wyr				{;}
+		;	
+wyrlog	: 	EQ				{logic.push("==");}
+		|	NE				{logic.push("!=");}
+		| 	LT				{logic.push("<");}
+		|	GT				{logic.push(">");}
 		;	
 wyr
 		:	wyr '+' skladnik		{fprintf(file, " + "); make_op('+', "add");}
