@@ -270,6 +270,7 @@ string gen_load_line_f(Element e, int reg_name)
 
 void make_op(char op, string mnemo)
 {
+	cout << "Make op\n";
 	static int rCounter = 0;
 	Element op2=argstack.top();
 	argstack.pop();
@@ -283,6 +284,7 @@ void make_op(char op, string mnemo)
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
+		cout << "=\n";
 		if(op2.type == ID) {
 			printf("op2 == ID");
 			if(symbols[op2.value]->type == INT_TYPE && (op1.type == LC || (op1.type == ID && symbols[op1.value]->type == INT_TYPE))) {
@@ -314,6 +316,7 @@ void make_op(char op, string mnemo)
 	}
 	else if(op == 'p')
 	{
+		cout << "p\n";
 		if(symbols[op2.value]->type == INT_TYPE) {
 			string line1 = gen_load_line(op1, 5);
 			string line2 = "syscall";
@@ -325,6 +328,7 @@ void make_op(char op, string mnemo)
 		else yyerror("Błąd. Proba przypisania błędnego typu zmiennej");
 	}
 	else if(op == 'f') {
+		cout << "f\n";
 		if(symbols[op2.value]->type == FLOAT_TYPE) {
 			string line1 = gen_load_line(op1, 6);
 			string line2 = "syscall";
@@ -337,8 +341,10 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
+		cout << "other";
 		if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE))
 		{
+			cout << "int & int\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, INT_TYPE, 0);
@@ -356,6 +362,7 @@ void make_op(char op, string mnemo)
 			// code.push_back("syscall");
 		}
 		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+			cout << "float & float\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
@@ -369,6 +376,7 @@ void make_op(char op, string mnemo)
 			code.push_back(line4);
 		}
 		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE)) {
+			cout << "float & int\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
@@ -376,7 +384,7 @@ void make_op(char op, string mnemo)
 			string line2 = "mtc1 $t0, $f0\n";
 			string line3 = "cvt.s.w $f1, $f0\n";
 			string line4 = "s.s $f1, " + op1.value + "\n";
-			string line8 = gen_load_line_f(op1, 0);
+			string line8 = gen_load_line_f(op1, 1);
 			string line5 = gen_load_line_f(op2, 2);
 			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
 			string line7 = "s.s $f1 , " + result_name + "\n";
@@ -390,13 +398,14 @@ void make_op(char op, string mnemo)
 			code.push_back(line7);
 		}
 		else if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+			cout << "int & float\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
 			string line1 = "li $t0, " + op2.value + "\n";
 			string line2 = "mtc1 $t0, $f0\n";
 			string line3 = "cvt.s.w $f1, $f0\n";
-			string line8 = gen_load_line_f(op1, 0);
+			string line8 = gen_load_line_f(op1, 1);
 			string line4 = gen_load_line_f(op2, 2);
 			string line5 = "s.s $f1, " + op2.value + "\n";
 			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
