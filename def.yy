@@ -24,24 +24,24 @@ public:
 	}
 };
 
-class Symbol_Info {
-public:
-	int type;
-	int size;
-	string value;
-	Symbol_Info(int type, int size) {
+// class Symbol_Info {
+// public:
+// 	int type;
+// 	int size;
+// 	string value;
+// 	Symbol_Info(int type, int size) {
 		
-		this->type = type;
-		this->value = to_string(size);
-	}
-	Symbol_Info(int type, string value) {
+// 		this->type = type;
+// 		this->value = to_string(size);
+// 	}
+// 	Symbol_Info(int type, string value) {
 		
-		this->type = type;
-		this->value = value;
-	}
-};
+// 		this->type = type;
+// 		this->value = value;
+// 	}
+// };
 vector <string> code;
-map<string, Symbol_Info *> symbols;
+map<string, Element *> symbols;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
@@ -67,6 +67,7 @@ void make_print_s(Element e, string value);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
+Element find_element(string name);
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
@@ -147,12 +148,20 @@ skladnik
 		|	czynnik					{fprintf(file, " ");}
 		;
 czynnik
-		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1);}
+		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(find_element($1))}
 		|	LC						{printf("LC\n"); fprintf(file, " %d ", $1); argstack.push(Element(INT_TYPE, to_string($1)));}
 		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
+Element find_element(string name) {
+	auto el = symbols.find(name);
+	if(el == symbols.end()) {
+		yyerror("Nie znaleziono tego argumentu. Błąd deklaracji!");
+	}
+	return el->second;
+}
+
 void ifbegin() {
 	if(argstack.top().type == ID) {
 		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
@@ -295,7 +304,7 @@ string gen_load_line(Element e, int regno)
 void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
-		symbols[symbol] = new Symbol_Info(type, size);
+		symbols[symbol] = new Element(type, to_string(size));
 	}
 	else yyerror("Dana zmienna już została zadeklarowana!");
 }
@@ -305,7 +314,7 @@ void insert_symbol_s(string symbol, int type, string value1)
 
 	if(symbols.find(symbol) == symbols.end()) {
 		
-		symbols[symbol] = new Symbol_Info(type, value1);
+		symbols[symbol] = new Element(type, value1);
 	}
 	else yyerror("Dana zmienna już została zadeklarowana!");
 }
@@ -403,6 +412,7 @@ void make_op(char op, string mnemo)
 		else {
 			string destreg;
 			Element cop = Element(0, 0);
+
 			if(op1.type == INT_TYPE) {
 				cop = op1;
 				destreg =  "f0";
