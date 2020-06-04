@@ -291,11 +291,13 @@ string gen_load_line(Element e, int regno)
 	return s.str();
 }
 
+
 void insert_symbol(string symbol, int type, int size)
 {
 	if(symbols.find(symbol) == symbols.end()) {
 		symbols[symbol] = new Symbol_Info(type, size);
 	}
+	else yyerror("Dana zmienna już została zadeklarowana!");
 }
 
 void insert_symbol_s(string symbol, int type, string value1)
@@ -305,6 +307,7 @@ void insert_symbol_s(string symbol, int type, string value1)
 		
 		symbols[symbol] = new Symbol_Info(type, value1);
 	}
+	else yyerror("Dana zmienna już została zadeklarowana!");
 }
 
 string gen_load_line_f(Element e, int reg_name)
@@ -386,83 +389,137 @@ void make_op(char op, string mnemo)
 	{
 		cout << "other\n";
 
-		if(op2.type == INT_TYPE && op1.type == INT_TYPE)
-		{
-			cout << "int & int\n";
-			Element e = Element(INT_TYPE, result_name);
-			argstack.push(e);
-			insert_symbol(e.value, INT_TYPE, 0);
-			string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
-			string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
-			string line3 = mnemo + " $t0 , $t0 , $t1\n";
-			string line4 = "sw $t0 , " + result_name + "\n";
+		string reg0 = "f0";
+		string reg1 = "f1";
+		int type = TYPE_FLOAT;
+		int convertedOp = 0;
+		if (op1.type == op2.type) {
+			if(op1.type == INT_TYPE) {
+				type = INT_TYPE;
+				reg0 = "t0";
+				reg1 = "t1";
+			}
+		}
+		else {
+			string destreg;
+			Element cop;
+			if(op1.type == TYPE_INT) {
+				cop = op1;
+				destreg =  "f0";
+				convertedOp = 1;
+			}
+			else {
+				cop = op2;
+				destreg = "f1";
+				convertedOp = 2;
+			}
+			string line1= gen_load_line2(cop, "t0");
+			string line2= "mtc1 $t0, $f0";
+			string line3 = "cvt.s.w $" + destreg + " , $f0";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+		}
+		insert_symbol(result_name, type, 0);
+		argstack.push(Element(type, result_name));
+		string line3, line4;
+		if(type == FLOAT_TYPE) {
+			line3 = mnemo + ".s $" + reg0 + ", $" + reg0 + ", $" + reg0;
+			line4 = "s.s $" + reg0 + ", " +result_name; 
+		}
+		else {
+			line3 = mnemo + reg0 + ", $" + reg0 + ", $" + reg0;
+			line4 = "sw $" + reg0 + ", " +result_name; 
+		}
 
+		if(convertedOp != 1) {
+			string line1= gen_load_line2(op1,reg0);
 			code.push_back(line1);
-			code.push_back(line2);
-			code.push_back(line3);
-			code.push_back(line4);
-			// code.push_back("li $v0 , 4");
-			// code.push_back("la $a0 , enter");
-			// code.push_back("syscall");
 		}
-		else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
-			cout << "float & float\n";
-			Element e = Element(FLOAT_TYPE, result_name);
-			argstack.push(e);
-			insert_symbol(e.value, FLOAT_TYPE, 0);
-			string line1 = gen_load_line_f(op1, 0); //"1_ $t0 , __";
-			string line2 = gen_load_line_f(op2, 1);
-			string line3 = mnemo + ".s $f0 , $f0 , $f1\n";
-			string line4 = "s.s $f0 , " + result_name + "\n";
-			code.push_back(line1);
+		if(convertedOp != 2) {
+			string line2= gen_load_line2(op2,reg1);
 			code.push_back(line2);
-			code.push_back(line3);
-			code.push_back(line4);
 		}
-		else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
-			cout << "float & int\n";
-			Element e = Element(FLOAT_TYPE, result_name);
-			argstack.push(e);
-			insert_symbol(e.value, FLOAT_TYPE, 0);
-			string line1 = "li $t0, " + op1.value + "\n";
-			string line2 = "mtc1 $t0, $f0\n";
-			string line3 = "cvt.s.w $f1, $f0\n";
-			string line4 = "s.s $f1, " + op1.value + "\n";
-			string line8 = gen_load_line_f(op1, 1);
-			string line5 = gen_load_line_f(op2, 2);
-			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
-			string line7 = "s.s $f1 , " + result_name + "\n";
-			code.push_back(line1);
-			code.push_back(line2);
-			code.push_back(line3);
-			code.push_back(line4);
-			code.push_back(line8);
-			code.push_back(line5);
-			code.push_back(line6);
-			code.push_back(line7);
-		}
-		else if(op2.type == INT_TYPE && op1.type == FLOAT_TYPE) {
-			cout << "int & float\n";
-			Element e = Element(FLOAT_TYPE, result_name);
-			argstack.push(e);
-			insert_symbol(e.value, FLOAT_TYPE, 0);
-			string line1 = "li $t0, " + op2.value + "\n";
-			string line2 = "mtc1 $t0, $f0\n";
-			string line3 = "cvt.s.w $f1, $f0\n";
-			string line8 = gen_load_line_f(op1, 1);
-			string line4 = gen_load_line_f(op2, 2);
-			string line5 = "s.s $f1, " + op2.value + "\n";
-			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
-			string line7 = "s.s $f1 , " + result_name + "\n";
-			code.push_back(line1);
-			code.push_back(line2);
-			code.push_back(line3);
-			code.push_back(line4);
-			code.push_back(line8);
-			code.push_back(line5);
-			code.push_back(line6);
-			code.push_back(line7);
-		}
+		code.push_back(line3);
+		code.push_back(line4);	
+
+		// if(op2.type == INT_TYPE && op1.type == INT_TYPE)
+		// {
+		// 	cout << "int & int\n";
+		// 	Element e = Element(INT_TYPE, result_name);
+		// 	argstack.push(e);
+		// 	insert_symbol(e.value, INT_TYPE, 0);
+		// 	string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
+		// 	string line2 = gen_load_line(op2, 1); //"1_ $t1 , __";
+		// 	string line3 = mnemo + " $t0 , $t0 , $t1\n";
+		// 	string line4 = "sw $t0 , " + result_name + "\n";
+
+		// 	code.push_back(line1);
+		// 	code.push_back(line2);
+		// 	code.push_back(line3);
+		// 	code.push_back(line4);
+		// 	// code.push_back("li $v0 , 4");
+		// 	// code.push_back("la $a0 , enter");
+		// 	// code.push_back("syscall");
+		// }
+		// else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
+		// 	cout << "float & float\n";
+		// 	Element e = Element(FLOAT_TYPE, result_name);
+		// 	argstack.push(e);
+		// 	insert_symbol(e.value, FLOAT_TYPE, 0);
+		// 	string line1 = gen_load_line_f(op1, 0); //"1_ $t0 , __";
+		// 	string line2 = gen_load_line_f(op2, 1);
+		// 	string line3 = mnemo + ".s $f0 , $f0 , $f1\n";
+		// 	string line4 = "s.s $f0 , " + result_name + "\n";
+		// 	code.push_back(line1);
+		// 	code.push_back(line2);
+		// 	code.push_back(line3);
+		// 	code.push_back(line4);
+		// }
+		// else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
+		// 	cout << "float & int\n";
+		// 	Element e = Element(FLOAT_TYPE, result_name);
+		// 	argstack.push(e);
+		// 	insert_symbol(e.value, FLOAT_TYPE, 0);
+		// 	string line1 = "li $t0, " + op1.value + "\n";
+		// 	string line2 = "mtc1 $t0, $f0\n";
+		// 	string line3 = "cvt.s.w $f1, $f0\n";
+		// 	string line4 = "s.s $f1, " + op1.value + "\n";
+		// 	string line8 = gen_load_line_f(op1, 1);
+		// 	string line5 = gen_load_line_f(op2, 2);
+		// 	string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
+		// 	string line7 = "s.s $f1 , " + result_name + "\n";
+		// 	code.push_back(line1);
+		// 	code.push_back(line2);
+		// 	code.push_back(line3);
+		// 	code.push_back(line4);
+		// 	code.push_back(line8);
+		// 	code.push_back(line5);
+		// 	code.push_back(line6);
+		// 	code.push_back(line7);
+		// }
+		// else if(op2.type == INT_TYPE && op1.type == FLOAT_TYPE) {
+		// 	cout << "int & float\n";
+		// 	Element e = Element(FLOAT_TYPE, result_name);
+		// 	argstack.push(e);
+		// 	insert_symbol(e.value, FLOAT_TYPE, 0);
+		// 	string line1 = "li $t0, " + op2.value + "\n";
+		// 	string line2 = "mtc1 $t0, $f0\n";
+		// 	string line3 = "cvt.s.w $f1, $f0\n";
+		// 	string line8 = gen_load_line_f(op1, 1);
+		// 	string line4 = gen_load_line_f(op2, 2);
+		// 	string line5 = "s.s $f1, " + op2.value + "\n";
+		// 	string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
+		// 	string line7 = "s.s $f1 , " + result_name + "\n";
+		// 	code.push_back(line1);
+		// 	code.push_back(line2);
+		// 	code.push_back(line3);
+		// 	code.push_back(line4);
+		// 	code.push_back(line8);
+		// 	code.push_back(line5);
+		// 	code.push_back(line6);
+		// 	code.push_back(line7);
+		// }
 	}
 	rCounter++;
 

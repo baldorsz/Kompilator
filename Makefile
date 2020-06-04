@@ -16,7 +16,7 @@ lex.yy.c: z.l
 	$(LEX) z.l
 
 def.tab.o:	def.tab.cc
-	$(CPP) -std=c++11 -c def.tab.cc
+	$(CPP) -std=c++11 -g -c def.tab.cc
 
 def.tab.cc:	def.yy
 	$(YACC) -d def.yy
