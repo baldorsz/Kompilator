@@ -102,7 +102,7 @@ program	: 	linia					{;}
 		|	program linia			{;}
 		;
 linia	:	wyrsred					{;}
-		|	wyrif					{;}
+		|	wyrif ';'				{;}
 		|	wyrwhile				{;}
 		;
 wyrwhile	:	while_begin '{' program '}'	{;}
