@@ -189,6 +189,10 @@ void whileBegin() {
 	// }
 }
 
+void whileEnd() {
+	
+}
+
 void ifbegin() {
 	// if(argstack.top().type == ID) {
 	// 	if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
