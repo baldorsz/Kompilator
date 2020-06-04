@@ -333,6 +333,22 @@ void make_op(char op, string mnemo)
 	s << result_name << " <= " << op1.value << op << op2.value;
 	cs << s.str() << endl;
 	cout << "przeszło op1 i op2\n";
+	for(auto symbol:symbols)
+	{
+		cout << symbol.first << ": \t\t";
+		if(symbol.second->type == 1)
+		{
+			cout << " .world " << symbol.second->size << endl;
+		}
+		else if(symbol.second->type == 2)
+		{
+			cout << " .float " << symbol.second->value << endl;
+		}
+		else if(symbol.second->type == 3)
+		{
+			cout << " .asciiz " << symbol.second->value << endl;
+		}
+	}
 
 	code.push_back("\n# " + s.str());
 	if (op == '=')
@@ -390,9 +406,6 @@ void make_op(char op, string mnemo)
 	}
 	else
 	{
-		cout << "other\n";
-		cout << to_string(op1.type) << endl;
-		cout << to_string(op2.type) << endl;
 		cout << "other\n";
 
 		if(op2.type == INT_TYPE && op1.type == INT_TYPE)
