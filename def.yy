@@ -342,7 +342,7 @@ void make_op(char op, string mnemo)
 		}
 		else if(symbol.second->type == 2)
 		{
-			cout << " .float " << symbol.second->size << endl;
+			cout << " .float " << symbol.second->value << endl;
 		}
 		else if(symbol.second->type == 3)
 		{
