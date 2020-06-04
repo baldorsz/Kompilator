@@ -94,6 +94,7 @@ int	ival; float fval;};
 %token PRINTI PRINTF PRINTS
 %token IF ELSE WHILE
 %token DEF
+%token nawiasP nawiasL
 %left '+' '-'
 %left '*' '/'
 //%start wyr
@@ -102,17 +103,17 @@ program	: 	linia					{;}
 		|	program linia			{;}
 		;
 linia	:	wyrsred					{;}
-		|	wyrif ';'				{;}
+		|	wyrif					{;}
 		|	wyrwhile				{;}
 		;
 wyrwhile	:	while_begin '{' program '}'	{;}
 			;
 while_begin	:	WHILE '(' warunek ')'		{;}
 			;
-wyrif	:	if_begin '{' program '}'		{cout << "koniec if\n"; ifend();}
-		|	else_begin '{' program '}'		{cout << "koniec else"; ifend();}
+wyrif	:	if_begin nawiasL program nawiasP		{cout << "koniec if\n"; ifend();}
+		|	else_begin nawiasL program nawiasP		{cout << "koniec else"; ifend();}
 		;
-else_begin	:	if_begin '{' program '}' ELSE	{ifelse();}
+else_begin	:	if_begin nawiasL program nawiasP ELSE	{ifelse();}
 			;
 if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin();}
 			;
