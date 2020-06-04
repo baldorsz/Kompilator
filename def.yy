@@ -67,7 +67,8 @@ void make_print_s(Element e, string value);
 void make_input_int(int v);
 void make_input_float(float f);
 void make_array(string, int, int);
-Element find_element(string name);
+string find_element_val(string name);
+int find_element_type(string name);
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
@@ -148,19 +149,28 @@ skladnik
 		|	czynnik					{fprintf(file, " ");}
 		;
 czynnik
-		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(find_element($1));}
+		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element($1), ));}
 		|	LC						{printf("LC\n"); fprintf(file, " %d ", $1); argstack.push(Element(INT_TYPE, to_string($1)));}
 		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
-Element find_element(string name) {
-	auto *it = symbols.find(name);
+string find_element_val(string name) {
+	auto it = symbols.find(name);
 	if (it == symbols.end())
 	{
 		yyerror("Błąd w deklaracji!");
 	}
-	return it->second;
+	return it->second->value;
+}
+
+int find_element_type(string name) {
+	auto it = symbols.find(name);
+	if (it == symbols.end())
+	{
+		yyerror("Błąd w deklaracji!");
+	}
+	return it->second->type;
 }
 
 void ifbegin() {
