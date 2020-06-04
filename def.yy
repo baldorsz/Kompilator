@@ -283,18 +283,18 @@ void make_op(char op, string mnemo)
 	cout << "przeszło op1 i op2\n";
 	for(auto symbol:symbols)
 	{
-		toMars << symbol.first << ": \t\t";
+		cout << symbol.first << ": \t\t";
 		if(symbol.second->type == 1)
 		{
-			toMars << " .world " << symbol.second->size << endl;
+			cout << " .world " << symbol.second->size << endl;
 		}
 		else if(symbol.second->type == 2)
 		{
-			toMars << " .float " << symbol.second->size << endl;
+			cout << " .float " << symbol.second->size << endl;
 		}
 		else if(symbol.second->type == 3)
 		{
-			toMars << " .asciiz " << symbol.second->value << endl;
+			cout << " .asciiz " << symbol.second->value << endl;
 		}
 	}
 
