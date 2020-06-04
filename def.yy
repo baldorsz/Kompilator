@@ -193,7 +193,8 @@ int return_arr_type(string name) {
 	{
 		yyerror("Nie dodano takiej tablicy");
 	}
-	return it->second;
+	cout << it << "\n\n\n\n";
+	return 1;
 }
 
 void make_op_arr() {
