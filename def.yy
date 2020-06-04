@@ -41,7 +41,9 @@ public:
 // 	}
 // };
 vector <string> code;
+vector <string> array;
 map<string, Element *> symbols;
+map<string, int> arrays_type;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
@@ -71,10 +73,14 @@ void make_input_float(float f);
 void make_array(string, int, int);
 string find_element_val(string name);
 int find_element_type(string name);
+void arr_go(string name, int place)
+void make_op_arr();
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
 string gen_load_line_2(string i, int reg_name);
+void insert_arr_type(string name, int type);
+int return_arr_type(string name);
 stringstream cs;
 
 FILE *file;
@@ -134,8 +140,8 @@ wyrsred	:	wyrprz ';'				{;}
 		|	arr_decl ';'			{;}
 		;
 arr_decl
-		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4));}
-		|	FLOAT ID '[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_FLOAT, "1:" + to_string($4));}
+		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4)); insert_arr_type($2, ARRAY_INT);}
+		|	FLOAT ID '[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_FLOAT, "1:" + to_string($4)); insert_arr_type($2, ARRAY_FLOAT);}
 		;
 
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
@@ -147,7 +153,7 @@ wyrwpr	:	INPUTI '('')'			{argstack.push(Element(INT_TYPE, to_string(0)));}
 		;
 wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
 		|	INT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
-		|	arr_expr '=' wyr		{cout << "przypis arr";}
+		|	arr_expr '=' wyr		{cout << "przypis arr"; make_op_arr();}
 		|	arr_expr '=' wyrwpr		{;}
 		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
@@ -164,7 +170,7 @@ skladnik
 		|	arr_expr				{;}
 		;
 arr_expr
-		:	ID '[' LC ']'			{cout << "arr_expr\n";}
+		:	ID '[' LC ']'			{cout << "arr_expr\n"; arr_go(string name, int place); argstack.push(Element($1, return_arr_type($1)));}
 		;
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
@@ -173,6 +179,49 @@ czynnik
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
+
+void insert_arr_type(string name, int type) {
+	if(arrays_type.find(name) == arrays_type.end()) {
+		arrays_type[name] = type;
+	}
+	else yyerror("Dana tablica już została zadeklarowana!");
+}
+
+int return_arr_type(string name) {
+	auto it = arrays_type.find(name);
+	if (it == arrays_name.end())
+	{
+		yyerror("Nie dodano takiej tablicy");
+	}
+	return it->second;
+}
+
+void make_op_arr() {
+	if(arrays_type.find())
+	Element op2 = argstack.top();
+	argstack.pop();
+	code.push_back(gen_load_line(op2, 0));
+	for(auto line: array)
+	{
+		code.push_back(line);
+	}
+	// if(op2.type == )
+
+}
+
+void arr_go(string name, int place) {
+	string line0 = "#" + name + "[" + to_string(place) + "]";
+	string line1 = "la $t4, " + name;
+	string line2 = "li $t5, " + to_sting(place);
+	string line3 = "mul $t5, $t5, 4"
+	string line4 = "add $t4, $t4, $t5"
+	array.push_back(line0);
+	array.push_back(line1);
+	array.push_back(line2);
+	array.push_back(line3);
+	array.push_back(line4);
+}
+
 string find_element_val(string name) {
 	auto it = symbols.find(name);
 	if (it == symbols.end())
