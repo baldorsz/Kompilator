@@ -170,7 +170,7 @@ skladnik
 		|	arr_expr				{;}
 		;
 arr_expr
-		:	ID '[' LC ']'			{cout << "arr_expr\n"; arr_go(string name, int place); argstack.push(Element($1, return_arr_type($1)));}
+		:	ID '[' LC ']'			{cout << "arr_expr\n"; arr_go($1, $3); argstack.push(Element($1, return_arr_type($1)));}
 		;
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
