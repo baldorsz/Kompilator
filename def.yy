@@ -159,7 +159,7 @@ Element find_element(string name) {
 	if(el == symbols.end()) {
 		yyerror("Nie znaleziono tego argumentu. Błąd deklaracji!");
 	}
-	return el.second;
+	return el;
 }
 
 void ifbegin() {
