@@ -137,9 +137,6 @@ wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); a
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
 wyrlog	: 	wyr LOGIC wyr				{;}
-		|	wyr LOGIC wyr				{;}
-		| 	wyr LOGIC wyr				{;}
-		|	wyr LOGIC wyr				{;}
 		;	
 LOGIC	: 	EQ				{logic.push("==");}
 		|	NE				{logic.push("!=");}
