@@ -197,15 +197,16 @@ int return_arr_type(string name) {
 }
 
 void make_op_arr() {
-	if(arrays_type.find())
-	Element op2 = argstack.top();
-	argstack.pop();
-	code.push_back(gen_load_line(op2, 0));
-	for(auto line: array)
-	{
-		code.push_back(line);
+	if(arrays_type.find() == INT_TYPE) {
+		Element op2 = argstack.top();
+		argstack.pop();
+		code.push_back(gen_load_line(op2, 0));
+		for(auto line: array)
+		{
+			code.push_back(line);
+		}
+		// if(op2.type == )
 	}
-	// if(op2.type == )
 
 }
 
@@ -213,8 +214,8 @@ void arr_go(string name, int place) {
 	string line0 = "#" + name + "[" + to_string(place) + "]";
 	string line1 = "la $t4, " + name;
 	string line2 = "li $t5, " + to_sting(place);
-	string line3 = "mul $t5, $t5, 4"
-	string line4 = "add $t4, $t4, $t5"
+	string line3 = "mul $t5, $t5, 4";
+	string line4 = "add $t4, $t4, $t5";
 	array.push_back(line0);
 	array.push_back(line1);
 	array.push_back(line2);
