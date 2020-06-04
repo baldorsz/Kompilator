@@ -190,7 +190,7 @@ void whileBegin() {
 }
 
 void whileEnd() {
-	
+
 }
 
 void ifbegin() {
@@ -205,7 +205,7 @@ void ifbegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("if nie przyjmuje wartości float");
+	else yyerror("if nie przyjmuje wartości float 3");
 
 	argstack.pop();
 
