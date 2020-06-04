@@ -192,7 +192,7 @@ void ifbegin() {
 	// }
 	// else if(argstack.top().type == INT_TYPE) code.push_back("li $t1, " + argstack.top().value);
 	if(argstack.top().type == INT_TYPE) {
-		if (symbols.find(argstack.top().value == symbols.end())
+		if (symbols.find(argstack.top().value == symbols.end()))
 		{
 			code.push_back("li $t1, " + argstack.top().value);
 		}
