@@ -189,7 +189,7 @@ void insert_arr_type(string name, int type) {
 
 int return_arr_type(string name) {
 	auto it = arrays_type.find(name);
-	if (it == arrays_name.end())
+	if (it == arrays_type.end())
 	{
 		yyerror("Nie dodano takiej tablicy");
 	}
