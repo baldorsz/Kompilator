@@ -131,7 +131,13 @@ LOGIC	: 	EQ				{logic.push("==");}
 		;
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
+		|	arr_decl ';'			{;}
 		;
+arr_decl
+		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4));}
+		|	FLOAT ID '[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_FLOAT, "1:" + to_string($4));}
+		;
+
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
 		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str"), $3);}
@@ -141,6 +147,8 @@ wyrwpr	:	INPUTI '('')'			{argstack.push(Element(INT_TYPE, to_string(0)));}
 		;
 wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
 		|	INT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
+		|	arr_expr '=' wyr		{cout << "przypis arr";}
+		|	arr_expr '=' wyrwpr		{;}
 		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
@@ -153,6 +161,10 @@ skladnik
 		:	skladnik '*' czynnik	{fprintf(file, " * "); make_op('*', "mul");}
 		|	skladnik '/' czynnik	{fprintf(file, " / "); make_op('/', "div");}
 		|	czynnik					{fprintf(file, " ");}
+		|	arr_expr				{;}
+		;
+arr_expr
+		:	ID '[' LC ']'			{cout << "arr_expr\n";}
 		;
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
