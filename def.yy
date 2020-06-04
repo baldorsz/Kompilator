@@ -205,15 +205,18 @@ void ifbegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("if nie przyjmuje wartości float 3");
+	else yyerror("if nie przyjmuje wartości float1");
 
 	argstack.pop();
 
-	if(argstack.top().type == ID) {
-		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t0, " + argstack.top().value);
+	if(argstack.top().type == INT_TYPE) {
+		if (symbols.find(argstack.top().value) == symbols.end())
+		{
+			code.push_back("li $t1, " + argstack.top().value);
+		}
+		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else if(argstack.top().type == LC) code.push_back("li $t0, " + argstack.top().value);
-	else yyerror("if nie przyjmuje wartości float");
+	else yyerror("if nie przyjmuje wartości float2");
 
 	warunek(logic.top());
 	logic.pop();
