@@ -487,7 +487,7 @@ int main(int argc, char *argv[])
 		toMars << symbol.first << ": \t\t";
 		if(symbol.second->type == 1)
 		{
-			toMars << " .world " << symbol.second->size << endl;
+			toMars << " .world " << symbol.second->value << endl;
 		}
 		else if(symbol.second->type == 2)
 		{
