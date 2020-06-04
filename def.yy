@@ -97,6 +97,7 @@ int	ival; float fval;};
 %token nawiasP nawiasL
 %left '+' '-'
 %left '*' '/'
+%define error-verbose
 //%start wyr
 %%
 program	: 	linia					{;}
