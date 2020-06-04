@@ -134,8 +134,8 @@ wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
 		|	PRINTF '(' wyr ')'		{make_print(FLOAT_TYPE);}
 		|	PRINTS '(' STRING ')'	{make_print_s(Element(STRING_TYPE, "str"), $3);}
 		;
-wyrwpr	:	INPUTI '('')'			{argstack.push(Element(LC, to_string(0)));}
-		|	INPUTF '('')'			{argstack.push(Element(LR, to_string(0.0)));}
+wyrwpr	:	INPUTI '('')'			{argstack.push(Element(INT_TYPE, to_string(0)));}
+		|	INPUTF '('')'			{argstack.push(Element(FLOAT_TYPE, to_string(0.0)));}
 		;
 wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('=', "sw");}
 		|	INT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(INT_TYPE, $2)); insert_symbol($2, INT_TYPE, 0);make_op('p', "sw");}
@@ -263,6 +263,7 @@ string getFloatName(string arg){
 
 void make_print(int type)
 {
+	cout << "print" << endl;
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
