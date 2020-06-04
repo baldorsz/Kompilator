@@ -449,7 +449,7 @@ void make_op(char op, string mnemo)
 			line4 = "s.s $" + reg0 + ", " +result_name; 
 		}
 		else {
-			line3 = mnemo + reg0 + ", $" + reg0 + ", $" + reg0;
+			line3 = mnemo + " $" + reg0 + ", $" + reg0 + ", $" + reg0;
 			line4 = "sw $" + reg0 + ", " +result_name; 
 		}
 
