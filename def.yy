@@ -50,8 +50,15 @@ const int ARRAY_INT = 4;
 const int ARRAY_FLOAT = 5;
 
 int float_num = 0;
+int lblCounter = 0;
 
 stack <Element> argstack;
+stack <string> logic;
+stack <string> labels;
+void ifbegin();
+void warunek(string logic);
+void ifend();
+void ifelse();
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
 void insert_symbol_s(string symbol, int type, string value1);
@@ -96,16 +103,18 @@ linia	:	wyrsred					{;}
 		|	wyrif					{;}
 		|	wyrwhile				{;}
 		;
-wyrif	:	if_begin '{' program '}'		{;}
-		|	else_begin '{' program '}'		{;}
-		;
-else_begin	:	if_begin '{' program '}' ELSE	{;}
-			;
-if_begin	:	IF '(' wyrlog ')'			{;}
-			;
 wyrwhile	:	while_begin '{' program '}'	{;}
 			;
-while_begin	:	WHILE '(' wyrlog ')'		{;}
+while_begin	:	WHILE '(' warunek ')'		{;}
+			;
+wyrif	:	if_begin '{' program '}'		{cout << "koniec if\n"; ifend();}
+		|	else_begin '{' program '}'		{cout << "koniec else"; ifend();}
+		;
+else_begin	:	if_begin '{' program '}' ELSE	{ifelse();}
+			;
+if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin()}
+			;
+warunek		:	wyr wyrlog wyr				{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
@@ -122,10 +131,10 @@ wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); a
 		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(ID, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
-wyrlog	: 	wyr EQ wyr				{;}
-		|	wyr NE wyr				{;}
-		| 	wyr LT wyr				{;}
-		|	wyr GT wyr				{;}
+wyrlog	: 	wyr EQ wyr				{logic.push("==");}
+		|	wyr NE wyr				{logic.push("!=");}
+		| 	wyr LT wyr				{logic.push("<");}
+		|	wyr GT wyr				{logic.push(">");}
 		;	
 wyr
 		:	wyr '+' skladnik		{fprintf(file, " + "); make_op('+', "add");}
@@ -144,6 +153,49 @@ czynnik
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
+void ifbegin() {
+	if(argstack.top().type == ID) {
+		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
+	}
+	else if(argstack.value == LC) code.push_push("li $t1, " + argstack.top().value);
+	else yyerror("if nie przyjmuje wartości float");
+
+	argstack.pop();
+
+	if(argstack.top().type == ID) {
+		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t0, " + argstack.top().value);
+	}
+	else if(argstack.value == LC) code.push_back("li $t0, " + argstack.top().value);
+	else yyerror("if nie przyjmuje wartości float");
+
+	warunek(logic.top());
+	logic.pop();
+	labels.push("label"+to_string(lblCounter));
+	lblCounter++;
+}
+
+void ifend()
+{
+	code.push_back(labels.top()+":");
+	labels.pop();
+}
+
+void ifelse() {
+	string tmp ="b label"+to_string(labelCounter+1);
+	code.push_back(tmp);
+	code.push_back(labels.top() + ":");
+	labels.pop();
+	lblCounter++;
+	labels.push("label"+to_string(lblCounter));
+}
+
+void warunek(string logicOp) {
+	if(logicOp == "==") code.push_back("bne $t0, $t1, label" + to_string(lblCounter));
+	else if(logicOp == "!=") code.push_back("beq $t0, $t1, label" + to_string(lblCounter));
+	else if(logicOp == "<") code.push_back("bge $t0, $t1, label" + to_string(lblCounter));
+	else if(logicOp == ">") code.push_back("ble $t0, $t1, label" + to_string(lblCounter));
+}
+
 string gen_load_line_2(string i, string reg_name)
 {
 	stringstream s;
@@ -297,10 +349,8 @@ void make_op(char op, string mnemo)
 			cout << " .asciiz " << symbol.second->value << endl;
 		}
 	}
-	if(op1.type == LR && op2.type == LR) cout << "LR" << endl;
 
 	code.push_back("\n# " + s.str());
-	cout << "push\n";
 	if (op == '=')
 	{
 		cout << "=\n";
