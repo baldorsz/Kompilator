@@ -155,11 +155,11 @@ czynnik
 		;
 %%
 Element find_element(string name) {
-	auto el = symbols.find(name);
-	if(el == symbols.end()) {
-		yyerror("Nie znaleziono tego argumentu. Błąd deklaracji!");
+	Element el;
+	if(symbols.find(name) != symbols.end()) {
+		el = &symbols[name];
 	}
-	return *el;
+	else yyerror("Dana zmienna już została zadeklarowana!");
 }
 
 void ifbegin() {
