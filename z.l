@@ -20,7 +20,7 @@ int yyerror(const char *,...);
 \]			{return ']';}
 \{			{return nawiasL;}
 \}			{return nawiasP;}
-\=\=			{return EQ;}
+\=\=		{return EQ;}
 \!\=		{return NE;}
 \;			{return ';';}
 \>			{return GT;}
@@ -36,7 +36,6 @@ int yyerror(const char *,...);
 "inputi"	{return INPUTI;}
 "inputf"	{return INPUTF;}
 "def"		{return DEF;}
-\=\=		{return EQ;}
 0|[1-9][0-9]*				{yylval.ival = atoi(yytext);return LC;}
 (0|[1-9][0-9]*)\.[0-9]+		{yylval.fval = atof(yytext);return LR;}
 [A-Za-z_][A-Za-z0-9_]* 		{yylval.text = strdup(yytext);return ID;}
