@@ -141,7 +141,7 @@ wyrlog	: 	wyr LOGIC wyr				{;}
 		| 	wyr LOGIC wyr				{;}
 		|	wyr LOGIC wyr				{;}
 		;	
-wyrlog	: 	EQ				{logic.push("==");}
+LOGIC	: 	EQ				{logic.push("==");}
 		|	NE				{logic.push("!=");}
 		| 	LT				{logic.push("<");}
 		|	GT				{logic.push(">");}
