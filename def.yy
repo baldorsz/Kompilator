@@ -373,16 +373,29 @@ void make_op(char op, string mnemo)
 			string line5 = gen_load_line_f(op2, 2);
 			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
 			string line7 = "s.s $f1 , " + result_name + "\n";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
+			code.push_back(line5);
+			code.push_back(line6);
+			code.push_back(line7);
 		}
 		else if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
 			string line1 = "li $t0, " + op2.value + "\n";
 			string line2 = "mtc1 $t0, $f0\n";
 			string line3 = "cvt.s.w $f1, $f0\n";
 			string line4 = gen_load_line_f(op2, 2);
-			string line3 = "s.s $f1, " + op2.value + "\n";
-			string line4 = gen_load_line_f(op2, 2);
-			string line3 = mnemo + ".s $f1 , $f1 , $f2\n";
-			string line4 = "s.s $f1 , " + result_name + "\n";
+			string line5 = "s.s $f1, " + op2.value + "\n";
+			string line6 = mnemo + ".s $f1 , $f1 , $f2\n";
+			string line7 = "s.s $f1 , " + result_name + "\n";
+			code.push_back(line1);
+			code.push_back(line2);
+			code.push_back(line3);
+			code.push_back(line4);
+			code.push_back(line5);
+			code.push_back(line6);
+			code.push_back(line7);
 		}
 	}
 	rCounter++;
