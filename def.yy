@@ -155,12 +155,12 @@ czynnik
 		;
 %%
 Element find_element(string name) {
-	auto it = symbols.find(name);
+	auto *it = symbols.find(name);
 	if (it == symbols.end())
 	{
 		yyerror("Błąd w deklaracji!");
 	}
-	return it->second*;
+	return it->second;
 }
 
 void ifbegin() {
