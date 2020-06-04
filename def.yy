@@ -280,6 +280,7 @@ void make_op(char op, string mnemo)
 	stringstream s;
 	s << result_name << " <= " << op1.value << op << op2.value;
 	cs << s.str() << endl;
+	cout << "przeszło op1 i op2\n";
 
 	code.push_back("\n# " + s.str());
 	if (op == '=')
