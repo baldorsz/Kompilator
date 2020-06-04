@@ -119,8 +119,14 @@ else_begin	:	if_begin code_block ELSE	{ifelse();}
 if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin();}
 			;
 code_block	:	nawiasL program nawiasP		{;}
-warunek		:	wyr wyrlog wyr				{;}
 			;
+warunek	: 	wyr LOGIC wyr				{;}
+		;	
+LOGIC	: 	EQ				{logic.push("==");}
+		|	NE				{logic.push("!=");}
+		| 	LT				{logic.push("<");}
+		|	GT				{logic.push(">");}
+		;
 wyrsred	:	wyrprz ';'				{;}
 		|	wyrwyp ';'				{;}
 		;
@@ -136,13 +142,6 @@ wyrprz	:	INT ID '=' wyr			{printf("Przypisanie\n"); fprintf(file, "%s =", $2); a
 		|	FLOAT ID '=' wyr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('=', "sw");}
 		|	FLOAT ID '=' wyrwpr		{printf("Przypisanie\n"); fprintf(file, "%s =", $2); argstack.push(Element(FLOAT_TYPE, $2)); insert_symbol($2, FLOAT_TYPE, 0);make_op('f', "sw");}
 		;
-wyrlog	: 	wyr LOGIC wyr				{;}
-		;	
-LOGIC	: 	EQ				{logic.push("==");}
-		|	NE				{logic.push("!=");}
-		| 	LT				{logic.push("<");}
-		|	GT				{logic.push(">");}
-		;	
 wyr
 		:	wyr '+' skladnik		{fprintf(file, " + "); make_op('+', "add");}
 		|	wyr '-' skladnik		{fprintf(file, " - "); make_op('-', "sub");}
