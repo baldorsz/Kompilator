@@ -54,7 +54,7 @@ int float_num = 0;
 stack <Element> argstack;
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
-void insert_symbol_s(string symbol, int type, string value);
+void insert_symbol_s(string symbol, int type, string value1);
 void make_print(int type);
 void make_print_s(Element e, string value);
 void make_input_int(int v);
@@ -252,12 +252,12 @@ void insert_symbol(string symbol, int type, int size)
 	}
 }
 
-void insert_symbol_s(string symbol, int type, string value)
+void insert_symbol_s(string symbol, int type, string value1)
 {
 
 	if(symbols.find(symbol) == symbols.end()) {
 		
-		symbols[symbol] = new Symbol_Info(type, value);
+		symbols[symbol] = new Symbol_Info(type, value1);
 	}
 }
 
