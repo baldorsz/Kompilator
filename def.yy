@@ -73,7 +73,7 @@ void make_input_float(float f);
 void make_array(string, int, int);
 string find_element_val(string name);
 int find_element_type(string name);
-void arr_go(string name, int place)
+void arr_go(string name, int place);
 void make_op_arr();
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
