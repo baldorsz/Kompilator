@@ -201,7 +201,7 @@ void make_op_arr() {
 	argstack.pop();
 	Element op1 = argstack.top();
 	argstack.pop();
-	if(arrays_type.find(op1.type) == INT_TYPE) {
+	if(arrays_type.find(op1.value) == INT_TYPE) {
 		//code.push_back(gen_load_line(op2, 0));
 		// for(auto line: array)
 		// {
@@ -215,7 +215,7 @@ void make_op_arr() {
 void arr_go(string name, int place) {
 	string line0 = "#" + name + "[" + to_string(place) + "]";
 	string line1 = "la $t4, " + name;
-	string line2 = "li $t5, " + to_sting(place);
+	string line2 = "li $t5, " + to_string(place);
 	string line3 = "mul $t5, $t5, 4";
 	string line4 = "add $t4, $t4, $t5";
 	// array.push_back(line0);
