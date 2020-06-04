@@ -59,6 +59,8 @@ void ifbegin();
 void warunek(string logic);
 void ifend();
 void ifelse();
+void whileEnd();
+void whileBegin();
 void make_op(char op, string mnemo);
 void insert_symbol(string symbol, int type, int size);
 void insert_symbol_s(string symbol, int type, string value1);
@@ -107,9 +109,9 @@ linia	:	wyrsred					{;}
 		|	wyrif					{;}
 		|	wyrwhile				{;}
 		;
-wyrwhile	:	while_begin code_block	{;}
+wyrwhile	:	while_begin code_block	{cout << "while koniec\n"; whileEnd();}
 			;
-while_begin	:	WHILE '(' warunek ')'		{;}
+while_begin	:	WHILE '(' warunek ')'		{cout << "poczatek while\n"; whileBegin();}
 			;
 wyrif	:	if_begin code_block		{cout << "koniec if\n"; ifend();}
 		|	else_begin code_block		{cout << "koniec else"; ifend();}
@@ -177,11 +179,25 @@ int find_element_type(string name) {
 	return it->second->type;
 }
 
+void whileBegin() {
+	code.push_back("label"+to_string(lblCounter)+":");
+	lblCounter++;
+
+	if(argstack.top().type == FLOAT)
+}
+
 void ifbegin() {
-	if(argstack.top().type == ID) {
-		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
+	// if(argstack.top().type == ID) {
+	// 	if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
+	// }
+	// else if(argstack.top().type == INT_TYPE) code.push_back("li $t1, " + argstack.top().value);
+	if(argstack.top().type == INT_TYPE) {
+		if (symbols.find(argstack.top().value == symbols.end())
+		{
+			code.push_back("li $t1, " + argstack.top().value);
+		}
+		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else if(argstack.top().type == LC) code.push_back("li $t1, " + argstack.top().value);
 	else yyerror("if nie przyjmuje wartości float");
 
 	argstack.pop();
