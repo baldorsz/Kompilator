@@ -157,7 +157,7 @@ void ifbegin() {
 	if(argstack.top().type == ID) {
 		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else if(argstack.top().value == LC) code.push_push("li $t1, " + argstack.top().value);
+	else if(argstack.top().value == LC) code.push_back("li $t1, " + argstack.top().value);
 	else yyerror("if nie przyjmuje wartości float");
 
 	argstack.pop();
@@ -165,7 +165,7 @@ void ifbegin() {
 	if(argstack.top().type == ID) {
 		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t0, " + argstack.top().value);
 	}
-	else if(argstack.value == LC) code.push_back("li $t0, " + argstack.top().value);
+	else if(argstack.top().value == LC) code.push_back("li $t0, " + argstack.top().value);
 	else yyerror("if nie przyjmuje wartości float");
 
 	warunek(logic.top());
