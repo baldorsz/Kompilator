@@ -183,21 +183,41 @@ void whileBegin() {
 	code.push_back("label"+to_string(lblCounter)+":");
 	lblCounter++;
 
-	// if(argstack.top().type == FLOAT)
-	// {
+	if(argstack.top().type == INT_TYPE) {
+		if (symbols.find(argstack.top().value) == symbols.end())
+		{
+			code.push_back("li $t1, " + argstack.top().value);
+		}
+		else code.push_back("lw $t1, " + argstack.top().value);
+	}
+	else yyerror("while nie przyjmuje wartości float1");
 
-	// }
+	argstack.pop();
+
+	if(argstack.top().type == INT_TYPE) {
+		if (symbols.find(argstack.top().value) == symbols.end())
+		{
+			code.push_back("li $t1, " + argstack.top().value);
+		}
+		else code.push_back("lw $t1, " + argstack.top().value);
+	}
+	else yyerror("while nie przyjmuje wartości float2");
+
+	argstack.pop();
+
+	warunek(logic.top());
+	logic.pop()
+	labels.push("label"+to_string(lblCounter));
+	lblCounter++;
 }
 
 void whileEnd() {
-
+	code.push_back("b label" + to_string(lblCounter));
+	code.push_back(labels.top() + ":");
+	labels.pop();
 }
 
 void ifbegin() {
-	// if(argstack.top().type == ID) {
-	// 	if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
-	// }
-	// else if(argstack.top().type == INT_TYPE) code.push_back("li $t1, " + argstack.top().value);
 	if(argstack.top().type == INT_TYPE) {
 		if (symbols.find(argstack.top().value) == symbols.end())
 		{
@@ -217,6 +237,8 @@ void ifbegin() {
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
 	else yyerror("if nie przyjmuje wartości float2");
+
+	argstack.pop();
 
 	warunek(logic.top());
 	logic.pop();
