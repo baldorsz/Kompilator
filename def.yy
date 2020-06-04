@@ -253,17 +253,9 @@ void make_print_s(Element e, string value) {
 	strCounter++;
 }
 
-string getFloatName(string arg){
-	for(auto symbol: symbols)
-	{
-		if (symbol.second->value == arg)
-        return symbol.first;
-	}
-}
-
 void make_print(int type)
 {
-	cout << "print" << endl;
+	cout << "print ";
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
@@ -278,12 +270,11 @@ void make_print(int type)
 			argstack.pop();
 	}
 	else if(type == FLOAT_TYPE) {
+			cout << "float"  << endl;
 			if(argstack.top().type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			string line1 = "# PRINT " + argstack.top().value;
 			string line2 = gen_load_line_2(to_string(2), "v0");
-			string line3 = "l.s $f12, ";
-			if(argstack.top().type == ID) line3 += argstack.top().value;
-			else line3 += getFloatName(argstack.top().value);
+			string line3 = "l.s $f12, " + argstack.top().value;
 			string line4 = "syscall";
 			code.push_back(line1);
 			code.push_back(line2);
