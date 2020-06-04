@@ -445,11 +445,11 @@ void make_op(char op, string mnemo)
 		argstack.push(Element(type, result_name));
 		string line3, line4;
 		if(type == FLOAT_TYPE) {
-			line3 = mnemo + ".s $" + reg0 + ", $" + reg0 + ", $" + reg0;
+			line3 = mnemo + ".s $" + reg0 + ", $" + reg0 + ", $" + reg1;
 			line4 = "s.s $" + reg0 + ", " +result_name; 
 		}
 		else {
-			line3 = mnemo + " $" + reg0 + ", $" + reg0 + ", $" + reg0;
+			line3 = mnemo + " $" + reg0 + ", $" + reg0 + ", $" + reg1;
 			line4 = "sw $" + reg0 + ", " +result_name; 
 		}
 
