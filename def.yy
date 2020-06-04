@@ -155,9 +155,8 @@ czynnik
 		;
 %%
 Element find_element(string name) {
-	Element el;
 	if(symbols.find(name) != symbols.end()) {
-		el = &symbols[name];
+		return &symbols[name];
 	}
 	else yyerror("Dana zmienna już została zadeklarowana!");
 }
