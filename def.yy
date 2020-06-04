@@ -398,7 +398,7 @@ void make_op(char op, string mnemo)
 		if(op2.type == INT_TYPE && op1.type == INT_TYPE)
 		{
 			cout << "int & int\n";
-			Element e = Element(ID, result_name);
+			Element e = Element(INT_TYPE, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, INT_TYPE, 0);
 			string line1 = gen_load_line(op1, 0); //"1_ $t0 , __";
@@ -416,7 +416,7 @@ void make_op(char op, string mnemo)
 		}
 		else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 			cout << "float & float\n";
-			Element e = Element(ID, result_name);
+			Element e = Element(FLOAT_TYPE, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
 			string line1 = gen_load_line_f(op1, 0); //"1_ $t0 , __";
@@ -430,7 +430,7 @@ void make_op(char op, string mnemo)
 		}
 		else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
 			cout << "float & int\n";
-			Element e = Element(ID, result_name);
+			Element e = Element(FLOAT_TYPE, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
 			string line1 = "li $t0, " + op1.value + "\n";
@@ -452,7 +452,7 @@ void make_op(char op, string mnemo)
 		}
 		else if(op2.type == INT_TYPE && op1.type == FLOAT_TYPE) {
 			cout << "int & float\n";
-			Element e = Element(ID, result_name);
+			Element e = Element(FLOAT_TYPE, result_name);
 			argstack.push(e);
 			insert_symbol(e.value, FLOAT_TYPE, 0);
 			string line1 = "li $t0, " + op2.value + "\n";
