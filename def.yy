@@ -402,7 +402,7 @@ void make_op(char op, string mnemo)
 		}
 		else {
 			string destreg;
-			Element cop;
+			Element cop = Element(0, 0);
 			if(op1.type == INT_TYPE) {
 				cop = op1;
 				destreg =  "f0";
