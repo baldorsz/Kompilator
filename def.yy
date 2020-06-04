@@ -297,6 +297,8 @@ void make_op(char op, string mnemo)
 			cout << " .asciiz " << symbol.second->value << endl;
 		}
 	}
+	cout << op1.type << endl;
+	cout << op2.type << endl;
 
 	code.push_back("\n# " + s.str());
 	if (op == '=')
