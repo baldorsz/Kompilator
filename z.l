@@ -20,12 +20,11 @@ int yyerror(const char *,...);
 \]			{return ']';}
 \{			{return nawiasL;}
 \}			{return nawiasP;}
+\=\=			{return EQ;}
 \!\=		{return NE;}
 \;			{return ';';}
-\>			{return '>';}
-\<			{return '<';}
-\>\=		{return GT;}
-\<\=		{return LT;}
+\>			{return GT;}
+\<			{return LT;}
 "if"		{return IF;}
 "else"		{return ELSE;}
 "int"		{return INT;}
