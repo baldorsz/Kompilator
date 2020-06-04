@@ -413,7 +413,7 @@ void make_op(char op, string mnemo)
 				destreg = "f1";
 				convertedOp = 2;
 			}
-			string line1= gen_load_line_2(cop, "t0");
+			string line1= gen_load_line_2(cop.value, "t0");
 			string line2= "mtc1 $t0, $f0";
 			string line3 = "cvt.s.w $" + destreg + " , $f0";
 			code.push_back(line1);
@@ -433,11 +433,11 @@ void make_op(char op, string mnemo)
 		}
 
 		if(convertedOp != 1) {
-			string line1= gen_load_line_2(op1,reg0);
+			string line1= gen_load_line_2(op1.value,reg0);
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			string line2= gen_load_line_2(op2,reg1);
+			string line2= gen_load_line_2(op2.value,reg1);
 			code.push_back(line2);
 		}
 		code.push_back(line3);
