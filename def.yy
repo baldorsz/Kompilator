@@ -300,6 +300,7 @@ void make_op(char op, string mnemo)
 	if(op1.type == LR && op2.type == LR) cout << "LR" << endl;
 
 	code.push_back("\n# " + s.str());
+	cout << "push\n";
 	if (op == '=')
 	{
 		cout << "=\n";
