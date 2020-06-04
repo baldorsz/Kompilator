@@ -111,8 +111,8 @@ wyrwhile	:	while_begin '{' program '}'	{;}
 			;
 while_begin	:	WHILE '(' warunek ')'		{;}
 			;
-wyrif	:	if_begin nawiasL program nawiasP		{cout << "koniec if\n"; ifend();}
-		|	else_begin nawiasL program nawiasP		{cout << "koniec else"; ifend();}
+wyrif	:	if_begin code_block		{cout << "koniec if\n"; ifend();}
+		|	else_begin code_block		{cout << "koniec else"; ifend();}
 		;
 else_begin	:	if_begin code_block ELSE	{ifelse();}
 			;
