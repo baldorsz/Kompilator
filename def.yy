@@ -112,7 +112,7 @@ wyrif	:	if_begin '{' program '}'		{cout << "koniec if\n"; ifend();}
 		;
 else_begin	:	if_begin '{' program '}' ELSE	{ifelse();}
 			;
-if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin()}
+if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin();}
 			;
 warunek		:	wyr wyrlog wyr				{;}
 			;
@@ -157,7 +157,7 @@ void ifbegin() {
 	if(argstack.top().type == ID) {
 		if(symbols[argstack.top().value]->type == INT_TYPE) code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else if(argstack.value == LC) code.push_push("li $t1, " + argstack.top().value);
+	else if(argstack.top().value == LC) code.push_push("li $t1, " + argstack.top().value);
 	else yyerror("if nie przyjmuje wartości float");
 
 	argstack.pop();
@@ -181,7 +181,7 @@ void ifend()
 }
 
 void ifelse() {
-	string tmp ="b label"+to_string(labelCounter+1);
+	string tmp ="b label"+to_string(lblCounter+1);
 	code.push_back(tmp);
 	code.push_back(labels.top() + ":");
 	labels.pop();
