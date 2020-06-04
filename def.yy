@@ -391,7 +391,7 @@ void make_op(char op, string mnemo)
 
 		string reg0 = "f0";
 		string reg1 = "f1";
-		int type = TYPE_FLOAT;
+		int type = FLOAT_TYPE;
 		int convertedOp = 0;
 		if (op1.type == op2.type) {
 			if(op1.type == INT_TYPE) {
