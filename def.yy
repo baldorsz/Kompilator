@@ -333,43 +333,25 @@ void make_op(char op, string mnemo)
 	s << result_name << " <= " << op1.value << op << op2.value;
 	cs << s.str() << endl;
 	cout << "przeszło op1 i op2\n";
-	for(auto symbol:symbols)
-	{
-		cout << symbol.first << ": \t\t";
-		if(symbol.second->type == 1)
-		{
-			cout << " .world " << symbol.second->size << endl;
-		}
-		else if(symbol.second->type == 2)
-		{
-			cout << " .float " << symbol.second->value << endl;
-		}
-		else if(symbol.second->type == 3)
-		{
-			cout << " .asciiz " << symbol.second->value << endl;
-		}
-	}
 
 	code.push_back("\n# " + s.str());
 	if (op == '=')
 	{
 		cout << "=\n";
-		if(op2.type == ID) {
-			printf("op2 == ID");
-			if(symbols[op2.value]->type == INT_TYPE && (op1.type == LC || (op1.type == ID && symbols[op1.value]->type == INT_TYPE))) {
+			if(op2.type == INT_TYPE && op1.type == INT_TYPE) {
 				printf("int do zmiennej int\n");
 				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
 				string line4 = "sw $t0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
 			}
-			else if(symbols[op2.value]->type == FLOAT_TYPE && (op1.type == LR || (op1.type == ID && symbols[op1.value]->type == FLOAT_TYPE))) {
+			else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 				string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
 			}
-			else if(symbols[op2.value]->type == FLOAT_TYPE && op1.type == LC) {
+			else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
 				string line1 = "li $t0, " + op1.value + "\n";
 				string line2 = "mtc1 $t0, $f0\n";
 				string line3 = "cvt.s.w $f1, $f0";
@@ -380,13 +362,11 @@ void make_op(char op, string mnemo)
 				code.push_back(line4);
 			}
 			else yyerror("Błąd przypisania! Zmienne, ktre chcesz przypisać są innego typu niż to możliwe!");
-		}
-		else yyerror("Błąd przypisania. Musisz przypisać liczbe do zmiennej!");
 	}
 	else if(op == 'p')
 	{
 		cout << "p\n";
-		if(symbols[op2.value]->type == INT_TYPE) {
+		if(op2.type == INT_TYPE) {
 			string line1 = gen_load_line(op1, 5);
 			string line2 = "syscall";
 			string line3 = "sw $v0 , " + op2.value;
@@ -398,7 +378,7 @@ void make_op(char op, string mnemo)
 	}
 	else if(op == 'f') {
 		cout << "f\n";
-		if(symbols[op2.value]->type == FLOAT_TYPE) {
+		if(op2.type == FLOAT_TYPE) {
 			string line1 = gen_load_line(op1, 6);
 			string line2 = "syscall";
 			string line3 = "s.s $f0 " + op2.value;
@@ -415,7 +395,7 @@ void make_op(char op, string mnemo)
 		cout << to_string(op2.type) << endl;
 		cout << "other\n";
 
-		if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE))
+		if(op2.type == INT_TYPE && op1.type == INT_TYPE)
 		{
 			cout << "int & int\n";
 			Element e = Element(ID, result_name);
@@ -434,7 +414,7 @@ void make_op(char op, string mnemo)
 			// code.push_back("la $a0 , enter");
 			// code.push_back("syscall");
 		}
-		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+		else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 			cout << "float & float\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
@@ -448,7 +428,7 @@ void make_op(char op, string mnemo)
 			code.push_back(line3);
 			code.push_back(line4);
 		}
-		else if((op2.type == LR || symbols[op2.value]->type == FLOAT_TYPE) && (op1.type == LC || symbols[op1.value]->type == INT_TYPE)) {
+		else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
 			cout << "float & int\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
@@ -470,7 +450,7 @@ void make_op(char op, string mnemo)
 			code.push_back(line6);
 			code.push_back(line7);
 		}
-		else if((op2.type == LC || symbols[op2.value]->type == INT_TYPE) && (op1.type == LR || symbols[op1.value]->type == FLOAT_TYPE)) {
+		else if(op2.type == INT_TYPE && op1.type == FLOAT_TYPE) {
 			cout << "int & float\n";
 			Element e = Element(ID, result_name);
 			argstack.push(e);
