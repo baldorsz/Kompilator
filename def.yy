@@ -206,7 +206,7 @@ void whileBegin() {
 	argstack.pop();
 
 	warunek(logic.top());
-	logic.pop()
+	logic.pop();
 	labels.push("label"+to_string(lblCounter));
 	lblCounter++;
 }
