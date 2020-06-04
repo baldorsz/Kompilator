@@ -32,7 +32,7 @@ public:
 	Symbol_Info(int type, int size) {
 		
 		this->type = type;
-		this->size = size;
+		this->value = to_string(size);
 	}
 	Symbol_Info(int type, string value) {
 		
@@ -516,7 +516,7 @@ int main(int argc, char *argv[])
 		}
 		else if(symbol.second->type == 2)
 		{
-			toMars << " .float " << symbol.second->size << endl;
+			toMars << " .float " << symbol.second->value << endl;
 		}
 		else if(symbol.second->type == 3)
 		{
