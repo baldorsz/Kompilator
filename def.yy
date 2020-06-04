@@ -114,10 +114,11 @@ while_begin	:	WHILE '(' warunek ')'		{;}
 wyrif	:	if_begin nawiasL program nawiasP		{cout << "koniec if\n"; ifend();}
 		|	else_begin nawiasL program nawiasP		{cout << "koniec else"; ifend();}
 		;
-else_begin	:	if_begin nawiasL program nawiasP ELSE	{ifelse();}
+else_begin	:	if_begin code_block ELSE	{ifelse();}
 			;
 if_begin	:	IF '(' warunek ')'			{cout << "if start\n"; ifbegin();}
 			;
+code_block	:	nawiasL program nawiasP		{;}
 warunek		:	wyr wyrlog wyr				{;}
 			;
 wyrsred	:	wyrprz ';'				{;}
