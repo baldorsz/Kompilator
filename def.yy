@@ -197,14 +197,16 @@ int return_arr_type(string name) {
 }
 
 void make_op_arr() {
-	if(arrays_type.find() == INT_TYPE) {
-		Element op2 = argstack.top();
-		argstack.pop();
-		code.push_back(gen_load_line(op2, 0));
-		for(auto line: array)
-		{
-			code.push_back(line);
-		}
+	Element op2 = argstack.top();
+	argstack.pop();
+	Element op1 = argstack.top();
+	argstack.pop();
+	if(arrays_type.find(op1.type) == INT_TYPE) {
+		//code.push_back(gen_load_line(op2, 0));
+		// for(auto line: array)
+		// {
+		// 	code.push_back(line);
+		// }
 		// if(op2.type == )
 	}
 
