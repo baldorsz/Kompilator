@@ -342,7 +342,7 @@ void make_print_s(Element e, string value) {
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
 	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
 	string line3 = gen_load_line_2(e.value, "a0");
-	string line4 = "syscal";
+	string line4 = "syscall";
 	code.push_back(line1);
 	code.push_back(line2);
 	code.push_back(line3);
@@ -352,7 +352,7 @@ void make_print_s(Element e, string value) {
 
 void make_print(int type)
 {
-	cout << "print ";
+	cout << "print \n";
 	if(type == INT_TYPE)
 	{
 		if(argstack.top().type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
