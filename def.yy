@@ -579,11 +579,11 @@ void make_op(char op, string mnemo)
 		}
 
 		if(convertedOp != 1) {
-			string line1= gen_load_line_2(op1,reg0, true);
+			string line1= gen_load_line_2(op1.value,reg0, true);
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			string line2= gen_load_line_2(op2,reg1, true);
+			string line2= gen_load_line_2(op2.value,reg1, true);
 			code.push_back(line2);
 		}
 		code.push_back(line3);
