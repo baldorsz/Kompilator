@@ -197,11 +197,11 @@ void arr_go(string name, int place) {
 	string line2 = "li $t5, " + to_string(place);
 	string line3 = "mul $t5, $t5, 4";
 	string line4 = "add $t4, $t4, $t5";
-	// array.push_back(line0);
-	// array.push_back(line1);
-	// array.push_back(line2);
-	// array.push_back(line3);
-	// array.push_back(line4);
+	array.push_back(line0);
+	array.push_back(line1);
+	array.push_back(line2);
+	array.push_back(line3);
+	array.push_back(line4);
 }
 
 string find_element_val(string name) {
