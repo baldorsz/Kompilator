@@ -43,13 +43,11 @@ public:
 vector <string> code;
 vector <string> array;
 map<string, Element *> symbols;
-map<string, int> arrays_type;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
 const int FLOAT_TYPE = 2;
 const int STRING_TYPE = 3;
 const int ARRAY_INT = 4;
-const int ARRAY_FLOAT = 5;
 
 int float_num = 0;
 int lblCounter = 0;
@@ -79,8 +77,6 @@ string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
 string gen_load_line_2(string i, int reg_name);
-void insert_arr_type(string name, int type);
-int return_arr_type(string name);
 stringstream cs;
 
 FILE *file;
@@ -140,8 +136,7 @@ wyrsred	:	wyrprz ';'				{;}
 		|	arr_decl ';'			{;}
 		;
 arr_decl
-		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4)); insert_arr_type($2, ARRAY_INT);}
-		|	FLOAT ID '[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_FLOAT, "1:" + to_string($4)); insert_arr_type($2, ARRAY_FLOAT);}
+		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4));}
 		;
 
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
@@ -180,29 +175,12 @@ czynnik
 		;
 %%
 
-void insert_arr_type(string name, int type) {
-	if(arrays_type.find(name) == arrays_type.end()) {
-		arrays_type[name] = type;
-	}
-	else yyerror("Dana tablica już została zadeklarowana!");
-}
-
-int return_arr_type(string name) {
-	auto it = arrays_type.find(name);
-	if (it == arrays_type.end())
-	{
-		yyerror("Nie dodano takiej tablicy");
-	}
-	cout << it.second << "\n\n\n\n";
-	return 1;
-}
 
 void make_op_arr() {
 	Element op2 = argstack.top();
 	argstack.pop();
-	Element op1 = argstack.top();
-	argstack.pop();
-	if(arrays_type.find(op1.value) == INT_TYPE) {
+
+	if(op2.type == INT_TYPE) {
 		//code.push_back(gen_load_line(op2, 0));
 		// for(auto line: array)
 		// {
@@ -594,7 +572,7 @@ int main(int argc, char *argv[])
 	for(auto symbol:symbols)
 	{
 		toMars << symbol.first << ": \t\t";
-		if(symbol.second->type == 1)
+		if(symbol.second->type == (1 || ARRAY_INT)
 		{
 			toMars << " .world " << symbol.second->value << endl;
 		}
