@@ -490,6 +490,8 @@ void make_op(char op, string mnemo)
 				string line3 = "cvt.s.w $f1, $f0";
 				string line4 = "s.s $f1, " + op1.value + "\n";
 				code.push_back(line1);
+				code.push_back(line2);
+				code.push_back(line3);
 				code.push_back(line4);
 			}
 			else yyerror("Błąd przypisania! Zmienne, ktore chcesz przypisać są innego typu niż to możliwe!");
