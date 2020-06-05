@@ -458,8 +458,7 @@ void make_op(char op, string mnemo)
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 				string floatName = float_tmp.back();
-				cout << floatName;
-				string line1 = gen_load_line_f(op1, 0);//"1_ $f0 , __";
+				string line1 = gen_load_line_2(floatName, to_string(0));//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
