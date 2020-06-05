@@ -583,7 +583,7 @@ void make_op(char op, string mnemo)
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			if(isdigit(op2.value[0]))
+			if(isdigit(op1.value[0]))
 			{
 				string line2= gen_load_line_2(op2.value,reg1, true);
 				code.push_back(line2);
