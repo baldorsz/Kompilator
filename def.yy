@@ -324,7 +324,7 @@ string gen_load_line_2(string i, string reg_name, bool isFloat)
 	stringstream s;
 	s << "l";
 	if(isFloat) {
-		s << ".s "
+		s << ".s ";
 	}
 	else if(isdigit(i[0]))
 	{
