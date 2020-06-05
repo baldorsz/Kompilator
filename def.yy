@@ -236,9 +236,9 @@ void whileBegin() {
 	if(argstack.top().type == INT_TYPE) {
 		if (symbols.find(argstack.top().value) == symbols.end())
 		{
-			code.push_back("li $t1, " + argstack.top().value);
+			code.push_back("li $t2, " + argstack.top().value);
 		}
-		else code.push_back("lw $t1, " + argstack.top().value);
+		else code.push_back("lw $t2, " + argstack.top().value);
 	}
 	else yyerror("while przyjmuje wartości tylko int");
 
@@ -247,9 +247,9 @@ void whileBegin() {
 	if(argstack.top().type == INT_TYPE) {
 		if (symbols.find(argstack.top().value) == symbols.end())
 		{
-			code.push_back("li $t1, " + argstack.top().value);
+			code.push_back("li $t3, " + argstack.top().value);
 		}
-		else code.push_back("lw $t1, " + argstack.top().value);
+		else code.push_back("lw $t3, " + argstack.top().value);
 	}
 	else yyerror("while przyjmuje wartości tylko int");
 
@@ -271,9 +271,9 @@ void ifbegin() {
 	if(argstack.top().type == INT_TYPE) {
 		if (symbols.find(argstack.top().value) == symbols.end())
 		{
-			code.push_back("li $t1, " + argstack.top().value);
+			code.push_back("li $t2, " + argstack.top().value);
 		}
-		else code.push_back("lw $t1, " + argstack.top().value);
+		else code.push_back("lw $t2, " + argstack.top().value);
 	}
 	else yyerror("if przyjmuje wartości tylko int");
 
@@ -282,9 +282,9 @@ void ifbegin() {
 	if(argstack.top().type == INT_TYPE) {
 		if (symbols.find(argstack.top().value) == symbols.end())
 		{
-			code.push_back("li $t1, " + argstack.top().value);
+			code.push_back("li $t3, " + argstack.top().value);
 		}
-		else code.push_back("lw $t1, " + argstack.top().value);
+		else code.push_back("lw $t3, " + argstack.top().value);
 	}
 	else yyerror("if przyjmuje wartości tylko int");
 
