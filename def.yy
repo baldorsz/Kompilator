@@ -24,22 +24,15 @@ public:
 	}
 };
 
-// class Symbol_Info {
-// public:
-// 	int type;
-// 	int size;
-// 	string value;
-// 	Symbol_Info(int type, int size) {
-		
-// 		this->type = type;
-// 		this->value = to_string(size);
-// 	}
-// 	Symbol_Info(int type, string value) {
-		
-// 		this->type = type;
-// 		this->value = value;
-// 	}
-// };
+class Array_ob {
+public:
+	int size;
+	string name;
+	Array_ob(int size, string name) {
+		this->size = size;
+		this->name = name;
+	}
+}
 vector <string> code;
 vector <string> arrays_v;
 map<string, Element *> symbols;
@@ -52,6 +45,7 @@ const int ARRAY_INT = 4;
 int float_num = 0;
 int lblCounter = 0;
 
+vector <Array_ob> Arrays_ob;
 stack <Element> argstack;
 stack <string> logic;
 stack <string> labels;
@@ -136,7 +130,7 @@ wyrsred	:	wyrprz ';'				{;}
 		|	arr_decl ';'			{;}
 		;
 arr_decl
-		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl; insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4));}
+		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl;if($4 < 1) yyerror("Nie można zadeklarować tablicy o rozmiarze mniejszym niż 1!"); insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4)); arrays_ob.insert(Array_ob($4, $2));}
 		;
 
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
@@ -194,17 +188,24 @@ void make_op_arr() {
 }
 
 void arr_go(string name, int place) {
-	string line0 = "#" + name + "[" + to_string(place) + "]";
-	string line1 = "la $t4, " + name;
-	string line2 = "li $t5, " + to_string(place);
-	string line3 = "mul $t5, $t5, 4";
-	string line4 = "add $t4, $t4, $t5";
-	arrays_v.push_back(line0);
-	arrays_v.push_back(line1);
-	arrays_v.push_back(line2);
-	arrays_v.push_back(line3);
-	arrays_v.push_back(line4);
-	argstack.push(Element(ARRAY_INT, name));
+	int size = 0;
+	for(int i = 0; i < Arrays_ob.size(); i++) {
+		if(Arrays_ob[i].name == name) size = Arrays_ob[i].size;
+	}
+	if(size <= 0 && place >= size) {
+		string line0 = "#" + name + "[" + to_string(place) + "]";
+		string line1 = "la $t4, " + name;
+		string line2 = "li $t5, " + to_string(place);
+		string line3 = "mul $t5, $t5, 4";
+		string line4 = "add $t4, $t4, $t5";
+		arrays_v.push_back(line0);
+		arrays_v.push_back(line1);
+		arrays_v.push_back(line2);
+		arrays_v.push_back(line3);
+		arrays_v.push_back(line4);
+		argstack.push(Element(ARRAY_INT, name));
+	}
+	else yyerror("Nie można odwołać się do elementu ujemnego lub większego niż rozmiar tablicy!");
 }
 
 string find_element_val(string name) {
