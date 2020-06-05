@@ -179,6 +179,7 @@ czynnik
 void make_op_arr() {
 	Element op2 = argstack.top();
 	argstack.pop();
+	argstack.pop();
 
 	if(op2.type == INT_TYPE) {
 		code.push_back(gen_load_line(op2, 0));
@@ -186,6 +187,7 @@ void make_op_arr() {
 		{
 			code.push_back(line);
 		}
+		arrays_v.clear();
 		code.push_back("sw $t0, ($t4)");
 	}
 	else yyerror("Nie można deklarowac tablic o wartościach innych niż float!");
@@ -202,6 +204,7 @@ void arr_go(string name, int place) {
 	arrays_v.push_back(line2);
 	arrays_v.push_back(line3);
 	arrays_v.push_back(line4);
+	argstack.push(Element(ARRAY_INT, name));
 }
 
 string find_element_val(string name) {
@@ -463,6 +466,28 @@ void make_op(char op, string mnemo)
 				code.push_back(line1);
 				code.push_back(line2);
 				code.push_back(line3);
+				code.push_back(line4);
+			}
+			else if(op2.type == ARRAY_INT && op1.type == INT_TYPE) {
+				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+				for(auto line: arrays_v)
+				{
+					code.push_back(line);
+				}
+				arrays_v.clear();
+				string line4 = "sw $t0 , " + op2.value;
+				code.push_back(line1);
+				code.push_back(line4);
+			}
+			else if(op2.type == ARRAY_INT && op1.type == FLOAT_TYPE) {
+				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+				for(auto line: arrays_v)
+				{
+					code.push_back(line);
+				}
+				arrays_v.clear();
+				string line4 = "sw $t0 , " + op2.value;
+				code.push_back(line1);
 				code.push_back(line4);
 			}
 			else yyerror("Błąd przypisania! Zmienne, ktre chcesz przypisać są innego typu niż to możliwe!");
