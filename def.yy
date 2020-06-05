@@ -167,7 +167,7 @@ arr_expr
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
 		|	LC						{printf("LC\t%d\n", $1); fprintf(file, " %d ", $1); argstack.push(Element(INT_TYPE, to_string($1)));}
-		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_tmp.push_back(float_name); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, to_string($1)));}
+		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_tmp.push_back(float_name); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, float_name));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
@@ -460,15 +460,16 @@ void make_op(char op, string mnemo)
 				code.push_back(line4);
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
-				string floatName = float_tmp.back();
-				string line1 = gen_load_line_2(floatName, "f"+to_string(0), true);//"1_ $f0 , __";
+				
+				//string floatName = float_tmp.back();
+				string line1 = gen_load_line_2(op1.value, "f"+to_string(0), true);//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
-				string floatName = float_tmp.back();
-				string line1 = "li $t0, " + floatName + "\n";
+				//string floatName = float_tmp.back();
+				string line1 = "li $t0, " + op1.value + "\n";
 				string line2 = "mtc1 $t0, $f0\n";
 				string line3 = "cvt.s.w $f1, $f0";
 				string line4 = "s.s $f1, " + op1.value + "\n";
@@ -585,10 +586,10 @@ void make_op(char op, string mnemo)
 			// 	code.push_back(line1);
 			// }
 			// else {
-				string floatName = float_tmp.back();
-				string line1 = gen_load_line_2(floatName,reg0, true);
+				//string floatName = float_tmp.back();
+				string line1 = gen_load_line_2(op1.value,reg0, true);
 				code.push_back(line1);
-				float_tmp.pop_back();
+				//float_tmp.pop_back();
 			// }
 		}
 		if(convertedOp != 2) {
@@ -599,7 +600,7 @@ void make_op(char op, string mnemo)
 			// }
 			// else {
 				string floatName = float_tmp.back();
-				string line2 = gen_load_line_2(floatName,reg1, true);
+				string line2 = gen_load_line_2(op2.value,reg1, true);
 				code.push_back(line2);
 			// }
 			
