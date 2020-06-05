@@ -34,6 +34,7 @@ public:
 	}
 };
 
+vector <string> float_tmp;
 vector <string> code;
 vector <string> arrays_v;
 map<string, Element *> symbols;
@@ -166,7 +167,7 @@ arr_expr
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
 		|	LC						{printf("LC\t%d\n", $1); fprintf(file, " %d ", $1); argstack.push(Element(INT_TYPE, to_string($1)));}
-		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, to_string($1)));}
+		|	LR						{printf("LR\n"); fprintf(file, " %f", $1); string float_name = "float_val_" + to_string(float_num); float_tmp.push_back(float_name); float_num++; insert_symbol_s(float_name, FLOAT_TYPE, to_string($1)); argstack.push(Element(FLOAT_TYPE, to_string($1)));}
 		|	'(' wyr ')'				{fprintf(file, " ");}
 		;
 %%
@@ -462,7 +463,7 @@ void make_op(char op, string mnemo)
 				code.push_back(line4);
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
-				string line1 = "li $t0, " + op1.value + "\n";
+				string line1 = "li $t0, " + float_tmp.back + "\n";
 				string line2 = "mtc1 $t0, $f0\n";
 				string line3 = "cvt.s.w $f1, $f0";
 				string line4 = "s.s $f1, " + op1.value + "\n";
