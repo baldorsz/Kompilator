@@ -468,7 +468,7 @@ void make_op(char op, string mnemo)
 				code.push_back(line3);
 				code.push_back(line4);
 			}
-			else if(op2.type == ARRAY_INT && op1.type == INT_TYPE) {
+			else if(op2.type == INT_TYPE && op1.type == ARRAY_INT) {
 				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
 				for(auto line: arrays_v)
 				{
@@ -479,18 +479,20 @@ void make_op(char op, string mnemo)
 				code.push_back(line1);
 				code.push_back(line4);
 			}
-			else if(op2.type == ARRAY_INT && op1.type == FLOAT_TYPE) {
-				string line1 = gen_load_line(op1, 0);//"1_ $t0 , __";
+			else if(op2.type == FLOAT_TYPE && op1.type == ARRAY_INT) {
 				for(auto line: arrays_v)
 				{
 					code.push_back(line);
 				}
 				arrays_v.clear();
-				string line4 = "sw $t0 , " + op2.value;
+				string line1 = "sw $t0, ($t4)";
+				string line2 = "mtc1 $t0, $f0\n";
+				string line3 = "cvt.s.w $f1, $f0";
+				string line4 = "s.s $f1, " + op1.value + "\n";
 				code.push_back(line1);
 				code.push_back(line4);
 			}
-			else yyerror("Błąd przypisania! Zmienne, ktre chcesz przypisać są innego typu niż to możliwe!");
+			else yyerror("Błąd przypisania! Zmienne, ktore chcesz przypisać są innego typu niż to możliwe!");
 	}
 	else if(op == 'p')
 	{
