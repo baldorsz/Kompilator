@@ -181,14 +181,14 @@ void make_op_arr() {
 	argstack.pop();
 
 	if(op2.type == INT_TYPE) {
-		//code.push_back(gen_load_line(op2, 0));
-		// for(auto line: array)
-		// {
-		// 	code.push_back(line);
-		// }
-		// if(op2.type == )
+		code.push_back(gen_load_line(op2, 0));
+		for(auto line: arrays_v)
+		{
+			code.push_back(line);
+		}
+		code.push_back("sw $t0, ($t4)");
 	}
-
+	else yyerror("Nie można deklarowac tablic o wartościach innych niż float!");
 }
 
 void arr_go(string name, int place) {
