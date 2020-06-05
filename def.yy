@@ -312,10 +312,10 @@ void ifelse() {
 }
 
 void warunek(string logicOp) {
-	if(logicOp == "==") code.push_back("bne $t0, $t1, label" + to_string(lblCounter));
-	else if(logicOp == "!=") code.push_back("beq $t0, $t1, label" + to_string(lblCounter));
-	else if(logicOp == "<") code.push_back("bge $t0, $t1, label" + to_string(lblCounter));
-	else if(logicOp == ">") code.push_back("ble $t0, $t1, label" + to_string(lblCounter));
+	if(logicOp == "==") code.push_back("bne $t2, $t3, label" + to_string(lblCounter));
+	else if(logicOp == "!=") code.push_back("beq $t2, $t3, label" + to_string(lblCounter));
+	else if(logicOp == "<") code.push_back("bge $t2, $t3, label" + to_string(lblCounter));
+	else if(logicOp == ">") code.push_back("ble $t2, $t3, label" + to_string(lblCounter));
 }
 
 string gen_load_line_2(string i, string reg_name)
