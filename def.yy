@@ -186,7 +186,7 @@ void make_op_arr() {
 		arrays_v.clear();
 		code.push_back("sw $t0, ($t4)");
 	}
-	else yyerror("Nie można deklarowac tablic o wartościach innych niż float!");
+	else yyerror("Nie można deklarowac tablic o wartościach innych niż int!");
 }
 
 void arr_go(string name, int place) {
@@ -240,7 +240,7 @@ void whileBegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("while nie przyjmuje wartości float1");
+	else yyerror("while przyjmuje wartości tylko int");
 
 	argstack.pop();
 
@@ -251,7 +251,7 @@ void whileBegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("while nie przyjmuje wartości float2");
+	else yyerror("while przyjmuje wartości tylko int");
 
 	argstack.pop();
 
@@ -275,7 +275,7 @@ void ifbegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("if nie przyjmuje wartości float1");
+	else yyerror("if przyjmuje wartości tylko int");
 
 	argstack.pop();
 
@@ -286,7 +286,7 @@ void ifbegin() {
 		}
 		else code.push_back("lw $t1, " + argstack.top().value);
 	}
-	else yyerror("if nie przyjmuje wartości float2");
+	else yyerror("if przyjmuje wartości tylko int");
 
 	argstack.pop();
 
