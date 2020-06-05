@@ -45,6 +45,7 @@ const int ARRAY_INT = 4;
 
 int float_num = 0;
 int lblCounter = 0;
+int strCounter = 0;
 
 vector <Array_ob> Arrays_ob;
 stack <Element> argstack;
@@ -336,7 +337,6 @@ string gen_load_line_2(string i, string reg_name)
 
 
 void make_print_s(Element e, string value) {
-	static int strCounter = 0;
 	string result_name = "str_" + to_string(strCounter);
 	insert_symbol_s(result_name, STRING_TYPE, value);
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
