@@ -41,7 +41,7 @@ public:
 // 	}
 // };
 vector <string> code;
-vector <string> array;
+vector <string> arrays_v;
 map<string, Element *> symbols;
 const int NONE_TYPE = 0;
 const int INT_TYPE = 1;
@@ -197,11 +197,11 @@ void arr_go(string name, int place) {
 	string line2 = "li $t5, " + to_string(place);
 	string line3 = "mul $t5, $t5, 4";
 	string line4 = "add $t4, $t4, $t5";
-	array.push_back(line0);
-	array.push_back(line1);
-	array.push_back(line2);
-	array.push_back(line3);
-	array.push_back(line4);
+	arrays_v.push_back(line0);
+	arrays_v.push_back(line1);
+	arrays_v.push_back(line2);
+	arrays_v.push_back(line3);
+	arrays_v.push_back(line4);
 }
 
 string find_element_val(string name) {
