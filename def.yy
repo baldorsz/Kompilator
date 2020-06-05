@@ -32,7 +32,8 @@ public:
 		this->size = size;
 		this->name = name;
 	}
-}
+};
+
 vector <string> code;
 vector <string> arrays_v;
 map<string, Element *> symbols;
