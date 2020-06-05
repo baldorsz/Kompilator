@@ -606,11 +606,11 @@ int main(int argc, char *argv[])
 		toMars << symbol.first << ": \t\t";
 		if(symbol.second->type == 1)
 		{
-			toMars << " .world " << symbol.second->value << endl;
+			toMars << " .word " << symbol.second->value << endl;
 		}
 		else if(symbol.second->type == 4)
 		{
-			toMars << " .world " << symbol.second->value << endl;
+			toMars << " .word " << symbol.second->value << endl;
 		}
 		else if(symbol.second->type == 2)
 		{
