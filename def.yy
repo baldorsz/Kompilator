@@ -586,12 +586,14 @@ void make_op(char op, string mnemo)
 			if(isdigit(op2.value[0]))
 			{
 				string line2= gen_load_line_2(op2.value,reg1, true);
+				code.push_back(line2);
 			}
 			else {
 				string floatName = float_tmp.back();
 				string line2 = gen_load_line_2(floatName,reg1, true);
+				code.push_back(line2);
 			}
-			code.push_back(line2);
+			
 		}
 		code.push_back(line3);
 		code.push_back(line4);	
