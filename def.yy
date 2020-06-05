@@ -73,7 +73,7 @@ void make_op_arr();
 string getFloatName(string arg);
 string gen_load_line(Element e, int regno);
 string gen_load_line_f(Element e, int regno);
-string gen_load_line_2(string i, int reg_name);
+string gen_load_line_2(string i, int reg_name, bool isFloat);
 stringstream cs;
 
 FILE *file;
@@ -319,11 +319,14 @@ void warunek(string logicOp) {
 	else if(logicOp == ">") code.push_back("ble $t2, $t3, label" + to_string(lblCounter));
 }
 
-string gen_load_line_2(string i, string reg_name)
+string gen_load_line_2(string i, string reg_name, bool isFloat)
 {
 	stringstream s;
 	s << "l";
-	if(isdigit(i[0]))
+	if(isFloat) {
+		s << ".s "
+	}
+	else if(isdigit(i[0]))
 	{
 		s << "i ";
 	}
@@ -331,7 +334,7 @@ string gen_load_line_2(string i, string reg_name)
 	{
 		s << "w ";
 	}
-	s << "$" << reg_name << " , " << i;
+	s << "$" << reg_name << ", " << i;
 	return s.str();
 }
 
@@ -341,8 +344,8 @@ void make_print_s(Element e, string value) {
 	string result_name = "str_" + to_string(strCounter);
 	insert_symbol_s(result_name, STRING_TYPE, value);
 	string line1 = "# PRINT " + e.value; //"1_ $t0 , __";
-	string line2 = gen_load_line_2(to_string(4), "v0"); //"1_ $t1 , __";
-	string line3 = gen_load_line_2(result_name, "a0");
+	string line2 = gen_load_line_2(to_string(4), "v0", false); //"1_ $t1 , __";
+	string line3 = gen_load_line_2(result_name, "a0", false);
 	string line4 = "syscall";
 	code.push_back(line1);
 	code.push_back(line2);
@@ -358,8 +361,8 @@ void make_print(int type)
 	{
 		if(argstack.top().type == FLOAT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby całkowite");
 			string line1 = "# PRINT " + argstack.top().value;
-			string line2 = gen_load_line_2(to_string(1), "v0");
-			string line3 = gen_load_line_2(argstack.top().value, "a0");
+			string line2 = gen_load_line_2(to_string(1), "v0", false);
+			string line3 = gen_load_line_2(argstack.top().value, "a0", false);
 			string line4 = "syscall";
 			code.push_back(line1);
 			code.push_back(line2);
@@ -371,7 +374,7 @@ void make_print(int type)
 			cout << "float"  << endl;
 			if(argstack.top().type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			string line1 = "# PRINT " + argstack.top().value;
-			string line2 = gen_load_line_f(to_string(2), "v0");
+			string line2 = gen_load_line_2(to_string(2), "v0", true);
 			string line3 = "l.s $f12, " + argstack.top().value;
 			string line4 = "syscall";
 			code.push_back(line1);
@@ -458,7 +461,7 @@ void make_op(char op, string mnemo)
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 				string floatName = float_tmp.back();
-				string line1 = gen_load_line_2(floatName, to_string(0));//"1_ $f0 , __";
+				string line1 = gen_load_line_2(floatName, to_string(0), true);//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
@@ -556,7 +559,7 @@ void make_op(char op, string mnemo)
 				destreg = "f1";
 				convertedOp = 2;
 			}
-			string line1= gen_load_line_2(cop.value, "t0");
+			string line1= gen_load_line_2(cop.value, "t0", true);
 			string line2= "mtc1 $t0, $f0";
 			string line3 = "cvt.s.w $" + destreg + " , $f0";
 			code.push_back(line1);
@@ -576,11 +579,11 @@ void make_op(char op, string mnemo)
 		}
 
 		if(convertedOp != 1) {
-			string line1= gen_load_line_f(op1,reg0);
+			string line1= gen_load_line_2(op1,reg0, true);
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			string line2= gen_load_line_f(op2,reg1);
+			string line2= gen_load_line_2(op2,reg1, true);
 			code.push_back(line2);
 		}
 		code.push_back(line3);
