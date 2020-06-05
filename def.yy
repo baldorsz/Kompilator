@@ -193,6 +193,7 @@ void arr_go(string name, int place) {
 	for(int i = 0; i < Arrays_ob.size(); i++) {
 		if(Arrays_ob[i].name == name) size = Arrays_ob[i].size;
 	}
+	cout << size << endl << endl;
 	if(size <= 0 && place >= size) {
 		string line0 = "#" + name + "[" + to_string(place) + "]";
 		string line1 = "la $t4, " + name;
