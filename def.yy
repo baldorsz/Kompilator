@@ -461,7 +461,7 @@ void make_op(char op, string mnemo)
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == FLOAT_TYPE) {
 				string floatName = float_tmp.back();
-				string line1 = gen_load_line_2(floatName, to_string(0), true);//"1_ $f0 , __";
+				string line1 = gen_load_line_2(floatName, "f"+to_string(0), true);//"1_ $f0 , __";
 				string line4 = "s.s $f0 , " + op2.value;
 				code.push_back(line1);
 				code.push_back(line4);
@@ -583,7 +583,14 @@ void make_op(char op, string mnemo)
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			string line2= gen_load_line_2(op2.value,reg1, true);
+			if(isdigit(op2.value[0])
+			{
+				string line2= gen_load_line_2(op2.value,reg1, true);
+			}
+			else {
+				string floatName = float_tmp.back();
+				string line2 = gen_load_line_2(floatName,reg1, true);
+			}
 			code.push_back(line2);
 		}
 		code.push_back(line3);
