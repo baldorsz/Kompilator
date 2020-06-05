@@ -510,7 +510,7 @@ void make_op(char op, string mnemo)
 	{
 		cout << "p\n";
 		if(op2.type == INT_TYPE) {
-			string line1 = gen_load_line_2(to_string(0), 5, false);
+			string line1 = gen_load_line_2(to_string(0), to_string(5), false);
 			string line2 = "syscall";
 			string line3 = "sw $v0 , " + op2.value;
 			code.push_back(line1);
@@ -522,7 +522,7 @@ void make_op(char op, string mnemo)
 	else if(op == 'f') {
 		cout << "f\n";
 		if(op2.type == FLOAT_TYPE) {
-			string line1 = gen_load_line_2(to_string(0), 6, false);
+			string line1 = gen_load_line_2(to_string(0), to_string(6), false);
 			string line2 = "syscall";
 			string line3 = "s.s $f0 " + op2.value;
 			code.push_back(line1);
