@@ -165,7 +165,7 @@ skladnik
 		|	arr_expr				{;}
 		;
 arr_expr
-		:	ID '[' LC ']'			{cout << "arr_expr\n"; arr_go($1, $3); argstack.push(Element(return_arr_type($1), $1));}
+		:	ID '[' LC ']'			{cout << "arr_expr\n"; arr_go($1, $3);}
 		;
 czynnik
 		:	ID						{printf("ID\n"); fprintf(file, " %s ", $1); argstack.push(Element(find_element_type($1), $1));}
@@ -572,7 +572,7 @@ int main(int argc, char *argv[])
 	for(auto symbol:symbols)
 	{
 		toMars << symbol.first << ": \t\t";
-		if(symbol.second->type == (1 || ARRAY_INT)
+		if(symbol.second->type == (1 || ARRAY_INT))
 		{
 			toMars << " .world " << symbol.second->value << endl;
 		}
