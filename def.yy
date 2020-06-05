@@ -131,7 +131,7 @@ wyrsred	:	wyrprz ';'				{;}
 		|	arr_decl ';'			{;}
 		;
 arr_decl
-		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl;if($4 < 1) yyerror("Nie można zadeklarować tablicy o rozmiarze mniejszym niż 1!"); insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4)); arrays_ob.insert(Array_ob($4, $2));}
+		:	INT ID	'[' LC ']'		{cout << "deklaracja tablicy" << endl;if($4 < 1) yyerror("Nie można zadeklarować tablicy o rozmiarze mniejszym niż 1!"); insert_symbol_s($2, ARRAY_INT, "1:" + to_string($4)); Arrays_ob.insert(Array_ob($4, $2));}
 		;
 
 wyrwyp	:	PRINTI '(' wyr ')' 		{make_print(INT_TYPE);}
