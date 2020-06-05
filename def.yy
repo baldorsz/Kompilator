@@ -194,7 +194,7 @@ void arr_go(string name, int place) {
 		if(Arrays_ob[i].name == name) size = Arrays_ob[i].size;
 	}
 	cout << size << endl << endl;
-	if(size <= 0 && place >= size) {
+	if(size <= 0 && place <= size) {
 		string line0 = "#" + name + "[" + to_string(place) + "]";
 		string line1 = "la $t4, " + name;
 		string line2 = "li $t5, " + to_string(place);
