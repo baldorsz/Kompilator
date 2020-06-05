@@ -586,8 +586,9 @@ void make_op(char op, string mnemo)
 			// }
 			// else {
 				string floatName = float_tmp.back();
-				string line1 = gen_load_line_2(floatName,reg1, true);
+				string line1 = gen_load_line_2(floatName,reg0, true);
 				code.push_back(line1);
+				float_tmp.pop_back();
 			// }
 		}
 		if(convertedOp != 2) {
