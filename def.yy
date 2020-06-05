@@ -371,7 +371,7 @@ void make_print(int type)
 			cout << "float"  << endl;
 			if(argstack.top().type == INT_TYPE) yyerror("Błąd, funkcja printi wyświetla tylko liczby zmiennoprzecinkowe");
 			string line1 = "# PRINT " + argstack.top().value;
-			string line2 = gen_load_line_2(to_string(2), "v0");
+			string line2 = gen_load_line_f(to_string(2), "v0");
 			string line3 = "l.s $f12, " + argstack.top().value;
 			string line4 = "syscall";
 			code.push_back(line1);
@@ -576,11 +576,11 @@ void make_op(char op, string mnemo)
 		}
 
 		if(convertedOp != 1) {
-			string line1= gen_load_line_2(op1.value,reg0);
+			string line1= gen_load_line_f(op1,reg0);
 			code.push_back(line1);
 		}
 		if(convertedOp != 2) {
-			string line2= gen_load_line_2(op2.value,reg1);
+			string line2= gen_load_line_f(op2,reg1);
 			code.push_back(line2);
 		}
 		code.push_back(line3);
