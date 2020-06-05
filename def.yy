@@ -491,7 +491,7 @@ void make_op(char op, string mnemo)
 				string line1 = "sw $t0, ($t4)";
 				string line2 = "mtc1 $t0, $f0\n";
 				string line3 = "cvt.s.w $f1, $f0";
-				string line4 = "s.s $f1, " op2.value;
+				string line4 = "s.s $f1, " + op2.value;
 				code.push_back(line1);
 				code.push_back(line2);
 				code.push_back(line3);
