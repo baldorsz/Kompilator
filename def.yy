@@ -463,7 +463,8 @@ void make_op(char op, string mnemo)
 				code.push_back(line4);
 			}
 			else if(op2.type == FLOAT_TYPE && op1.type == INT_TYPE) {
-				string line1 = "li $t0, " + float_tmp.back + "\n";
+				string floatName = float_tmp.back();
+				string line1 = "li $t0, " + floatName + "\n";
 				string line2 = "mtc1 $t0, $f0\n";
 				string line3 = "cvt.s.w $f1, $f0";
 				string line4 = "s.s $f1, " + op1.value + "\n";
